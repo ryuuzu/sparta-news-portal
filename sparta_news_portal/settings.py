@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     "tailwind",
     "theme",
     "django_browser_reload",
+
+    # Other
+    "news_portal",
 ]
 
 MIDDLEWARE = [
