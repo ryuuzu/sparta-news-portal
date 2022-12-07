@@ -6,4 +6,5 @@ urlpatterns = [
     path('forex/', views.forexapi, name="Forex"),
     path('horoscope/', views.horoscopeapi, name="Horoscope"),
     path('weather/', views.weatherapi, name="Weather"),
+    path('login/', views.login, name="login"),
 ]
