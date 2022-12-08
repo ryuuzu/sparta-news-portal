@@ -4,11 +4,11 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 # Local Imports
-from .choices import Types, GENDER_CHOICES, SOURCE_CHOICES, NEWS_CATEGORY, PACKAGE_CHOICES
+from .choices import Types, GENDER_CHOICES, SOURCE_CHOICES, NEWS_CATEGORY, PACKAGE_CHOICES, REPORTED_STATUS
 from .user_managers import ReaderManager, ReporterManager, PortalUserManager
 
-# Create your models here.
 
+# Create your models here.
 class PortalUser(AbstractBaseUser):
     type = models.CharField(max_length=25, choices=Types.choices, default=Types.READER)
 
@@ -33,7 +33,7 @@ class PortalUser(AbstractBaseUser):
     contact_number = models.CharField(
         max_length=10, verbose_name="Contact Number", null=True, blank=True)
     photo = models.ImageField(
-        verbose_name="User Photo", null=True, blank=True)
+        verbose_name="User Photo", null=True, blank=True, upload_to="photos")
     
     city = models.CharField(
         max_length=50, verbose_name="Permanent Address", null=True, blank=True)
@@ -82,9 +82,9 @@ class ReaderProfile(models.Model):
 class ReporterProfile(models.Model):
     user = models.OneToOneField(PortalUser, on_delete=models.CASCADE)
     press_id = models.ImageField(
-        verbose_name="Press ID", null=True, blank=True)
+        verbose_name="Press ID", null=True, blank=True, upload_to="photos")
     identity_document = models.ImageField(
-        verbose_name="Identity Document", null=True, blank=True)
+        verbose_name="Identity Document", null=True, blank=True, upload_to="photos")
 
 @receiver(post_save, sender=Reporter)
 @receiver(post_save, sender=Reader)
@@ -97,26 +97,26 @@ def create_all_profiles(sender, instance, **kwargs):
         pass
 
 class News(models.Model):
+    created_by = models.OneToOneField(Reporter, on_delete=models.PROTECT)
     title = models.CharField(max_length=1000)
     sub_title = models.CharField(max_length=1000)
-    description = models.TextField()
     body = models.TextField()
-    image1 = models.ImageField()
-    image2 = models.ImageField()
-    image3 = models.ImageField()
+    image1 = models.ImageField(blank=True, null=True, upload_to="photos")
+    image2 = models.ImageField(blank=True, null=True, upload_to="photos")
+    image3 = models.ImageField(blank=True, null=True, upload_to="photos")
     source = models.CharField(max_length=100,choices=SOURCE_CHOICES)
     location = models.CharField(max_length=100)
     category = models.CharField(max_length=100, choices=NEWS_CATEGORY)
     upload_date = models.DateTimeField(auto_now_add=True)
     edit_date = models.DateTimeField(auto_now=True)
     is_anonymous = models.BooleanField(default=False)
-    view_count = models.BigIntegerField()
+    view_count = models.BigIntegerField(default=0)
 
 class Evidence(models.Model):
     news_id = models.OneToOneField(News, on_delete=models.CASCADE)
-    image = models.ImageField()
-    file = models.FileField()
-    file = models.FileField()
+    image = models.ImageField(blank=True, null=True, upload_to="photos")
+    file1 = models.FileField(upload_to="documents")
+    file2 = models.FileField(blank=True, null=True, upload_to="documents")
 
 class Comment(models.Model):
     news_id = models.OneToOneField(News, on_delete=models.CASCADE)
@@ -126,7 +126,7 @@ class Comment(models.Model):
 class Ad(models.Model):
     company = models.CharField(max_length=250)
     contact = models.CharField(max_length=25)
-    image = models.ImageField()
+    image = models.ImageField(upload_to="photos")
     package = models.CharField(max_length=50, choices=PACKAGE_CHOICES)
     start_date_time = models.DateTimeField()
     end_date_time = models.DateTimeField()
@@ -136,4 +136,4 @@ class ReportedNews(models.Model):
     user_id = models.ForeignKey(Reader, on_delete=models.CASCADE)
     description = models.TextField()
     date_time = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=50)
+    status = models.CharField(max_length=50, choices=REPORTED_STATUS)

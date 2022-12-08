@@ -29,3 +29,9 @@ PACKAGE_CHOICES = (
     ('silver', 'Silver'),
     ('gold', 'Gold'),
 )
+
+REPORTED_STATUS = (
+    ('pending', 'Pending'),
+    ('denied', 'Denied'),
+    ('accepted', 'Accepted'),
+)
