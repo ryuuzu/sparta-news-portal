@@ -1,0 +1,39 @@
+<h1>News Form</h1>
+<form action="{% url 'addnews' %}" enctype='multipart/form-data' method="post">
+    {% csrf_token %}
+    {{ news.as_p }}
+    <input type="submit" value="Submit"/>
+</form>
+<br><br><br>
+
+<h1>Reported News Form</h1>
+<form action="{% url 'reportnews' 1 %}" method="post">
+    {% csrf_token %}
+    {{ report.as_p }}
+    <input type="submit" value="Submit"/>
+</form>
+<br><br><br>
+
+<h1>Comment Form</h1>
+<form action="{% url 'addcomment' 1 %}" method="post">
+    {% csrf_token %}
+    {{ comment.as_p }}
+    <input type="submit" value="Submit"/>
+</form>
+<br><br><br>
+
+<h1>Evidence Form</h1>
+<form action="{% url 'addevidence' 2 %}" enctype='multipart/form-data' method="post">
+    {% csrf_token %}
+    {{ evidence.as_p }}
+    <input type="submit" value="Submit"/>
+</form>
+<br><br><br>
+
+<h1>Ad Form</h1>
+<form action="{% url 'requestad'  %}" enctype='multipart/form-data' method="post">
+    {% csrf_token %}
+    {{ ad.as_p }}
+    <input type="submit" value="Submit"/>
+</form>
+

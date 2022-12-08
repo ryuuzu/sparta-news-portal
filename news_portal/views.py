@@ -1,6 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-
+from .forms import NewsForm, EvidenceForm, CommentForm, ReportedNewsForm, AdRequestForm
 import requests
 import json
 
@@ -24,13 +23,60 @@ headersweather = {
 
 urlCurrency = "https://currency-conversion-and-exchange-rates.p.rapidapi.com/symbols"
 
-# Create your views here.
+#the main page of the app.
 def index(request):
-    return HttpResponse('This is homepage.')
+    news = NewsForm()
+    report = ReportedNewsForm()
+    comment = CommentForm()
+    evidence = EvidenceForm()
+    ad = AdRequestForm()
+    context = {
+        "news":news,
+        "report":report,
+        "comment":comment,
+        "evidence":evidence,
+        "ad":ad
+    }
+    return render(request, "renderforms.html", context)
+
 
 def login(request):
     return render(request, "login.html")
 
+#the page to add news
+def addNews(request):
+    if request.method == "POST":
+        form = NewsForm(request.POST)
+        if form.is_valid():
+            form.save()
+       
+        return render(request, "checkformlogic.html", {"form":form})
+    return render(request, "checkformlogic.html")
+
+
+#handle the reported news
+def reportNews(request, pk):
+    pass
+
+#handle comments added in news
+def addComment(request, pk):
+    pass
+
+#handle evidence added for news
+def addEvidence(request, pk):
+    pass
+
+def requestAd(request):
+    if request.method == "POST":
+        form = AdRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+        else:
+            print("Form is not valid")
+        return render(request, "checkformlogic.html", {"form":form})
+    return render(request, "checkformlogic.html")
+
+#get horoscope from api and render result
 def horoscopeapi(request):
     horoscope = ['pisces','aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 'scorpion', 'sagittarius', 'capricorn']
     if request.method == "POST":
@@ -41,6 +87,7 @@ def horoscopeapi(request):
 
     return render(request,"horoscope.html", {'horoscope':horoscope})
 
+#get weather from api and render result
 def weatherapi(request):
     cities = [
         'Kathmandu', 'Pokhara', 'Lumbini', 'Butwal', 'Jhapa', 'Illam', 'Humla', 'Jumla'
@@ -48,26 +95,21 @@ def weatherapi(request):
     if request.method == "POST":
         city = request.POST.get('city')
         querystring = {"q":city+", NP"}
-        #querystring = {"q": "30.0052, 81.9535"}
         response = requests.request("GET", urlWeather, headers=headersweather, params=querystring)
         return render(request,"weather.html", {'cities':cities, 'response':response.text})
     
     return render(request,'weather.html', {'cities':cities})
 
-
+#get forex from api and render result
 def forexapi(request):
     currency = requests.request("GET", urlCurrency, headers=headersforex)
     currency = json.loads(currency.text)
     if request.method=="POST":
         fro = request.POST.get('fromcurrency')
-        print(fro)
         to = request.POST.get('tocurrency')
-        print(to)
         amount = request.POST.get('amount')
-        print(amount)
         querystring = {"from":fro,"to":to,"amount":amount}
         response = requests.request("GET", urlForex, headers=headersforex, params=querystring)
-        print(response.text)
         return render(request,"forex.html", {'currency':currency['symbols'], 'response':response.text})
 
     return render(request,"forex.html", {'currency':currency['symbols']})
