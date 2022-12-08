@@ -28,6 +28,8 @@ urlCurrency = "https://currency-conversion-and-exchange-rates.p.rapidapi.com/sym
 def index(request):
     return HttpResponse('This is homepage.')
 
+def login(request):
+    return render(request, "login.html")
 
 def horoscopeapi(request):
     horoscope = ['pisces','aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 'scorpion', 'sagittarius', 'capricorn']
