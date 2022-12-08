@@ -15,13 +15,8 @@ headershoroscope = {
 	"X-RapidAPI-Host": "sameer-kumar-aztro-v1.p.rapidapi.com"
 }
 
-urlWeather = "https://weatherapi-com.p.rapidapi.com/current.json"
-headersweather = {
-	"X-RapidAPI-Key": "bb0db28f73msh13b9827639755afp1f8800jsnaba709482da2",
-	"X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com"
-}
-
 urlCurrency = "https://currency-conversion-and-exchange-rates.p.rapidapi.com/symbols"
+
 
 #the main page of the app.
 def index(request):
@@ -90,12 +85,11 @@ def horoscopeapi(request):
 #get weather from api and render result
 def weatherapi(request):
     cities = [
-        'Kathmandu', 'Pokhara', 'Lumbini', 'Butwal', 'Jhapa', 'Illam', 'Humla', 'Jumla'
+        'Kathmandu', 'Pokhara', 'Lumbini', 'Butwal', 'Biratnagar'
     ]
     if request.method == "POST":
         city = request.POST.get('city')
-        querystring = {"q":city+", NP"}
-        response = requests.request("GET", urlWeather, headers=headersweather, params=querystring)
+        response = requests.request("POST", "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=9cafb52078077411bf7a0a82cbc790c3&units=metric")
         return render(request,"weather.html", {'cities':cities, 'response':response.text})
     
     return render(request,'weather.html', {'cities':cities})
