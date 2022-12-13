@@ -8,7 +8,7 @@ from .choices import Types, GENDER_CHOICES, SOURCE_CHOICES, NEWS_CATEGORY, PACKA
 from .user_managers import ReaderManager, ReporterManager, PortalUserManager
 
 
-# Create your models here.
+# Base user model
 class PortalUser(AbstractBaseUser):
     type = models.CharField(max_length=25, choices=Types.choices, default=Types.READER)
 
@@ -57,6 +57,7 @@ class PortalUser(AbstractBaseUser):
             self.type = Types.ADMIN
         return super().save(*args, **kwargs)
 
+# reporter model based on base user
 class Reporter(PortalUser):
     class Meta:
         proxy = True
@@ -66,6 +67,7 @@ class Reporter(PortalUser):
             self.type = Types.REPORTER
         return super().save(*args, **kwargs)
 
+#reporter model based on base user
 class Reader(PortalUser):
     class Meta:
         proxy = True
@@ -75,10 +77,12 @@ class Reader(PortalUser):
             self.type = Types.READER
         return super().save(*args, **kwargs)
 
+# reader profile (for future)
 class ReaderProfile(models.Model):
     # user = models.OneToOneField(PortalUser, on_delete=models.CASCADE)
     pass    
 
+#reporter profile to get extra information
 class ReporterProfile(models.Model):
     user = models.OneToOneField(PortalUser, on_delete=models.CASCADE)
     press_id = models.ImageField(
@@ -86,6 +90,8 @@ class ReporterProfile(models.Model):
     identity_document = models.ImageField(
         verbose_name="Identity Document", null=True, blank=True, upload_to="photos")
 
+
+#create new profiles
 @receiver(post_save, sender=Reporter)
 @receiver(post_save, sender=Reader)
 def create_all_profiles(sender, instance, **kwargs):
@@ -96,6 +102,7 @@ def create_all_profiles(sender, instance, **kwargs):
     else:
         pass
 
+#model to create news
 class News(models.Model):
     created_by = models.OneToOneField(Reporter, on_delete=models.PROTECT)
     title = models.CharField(max_length=1000)
@@ -111,18 +118,22 @@ class News(models.Model):
     edit_date = models.DateTimeField(auto_now=True)
     is_anonymous = models.BooleanField(default=False)
     view_count = models.BigIntegerField(default=0)
+    coin_generated = models.BigIntegerField(default=0)
 
+# models to create evidence
 class Evidence(models.Model):
     news_id = models.OneToOneField(News, on_delete=models.CASCADE)
     image = models.ImageField(blank=True, null=True, upload_to="photos")
     file1 = models.FileField(upload_to="documents")
     file2 = models.FileField(blank=True, null=True, upload_to="documents")
 
+# model to create comment
 class Comment(models.Model):
     news_id = models.OneToOneField(News, on_delete=models.CASCADE)
     user_id = models.ForeignKey(Reader, on_delete=models.CASCADE)
     comment = models.TextField()
 
+# model to create ad
 class Ad(models.Model):
     company = models.CharField(max_length=250)
     contact = models.CharField(max_length=25)
@@ -131,9 +142,16 @@ class Ad(models.Model):
     start_date_time = models.DateTimeField()
     end_date_time = models.DateTimeField()
 
+# model to create reported news
 class ReportedNews(models.Model):
     news_id = models.OneToOneField(News, on_delete=models.CASCADE)
     user_id = models.ForeignKey(Reader, on_delete=models.CASCADE)
     description = models.TextField()
     date_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=50, choices=REPORTED_STATUS)
+
+# model to create rewards
+class RewardGranted(models.Model):
+    user_id = models.ForeignKey(Reporter, on_delete=models.CASCADE)
+    coins_redeemed = models.CharField(max_length=25)
+    monetary_value = models.CharField(max_length=25)

@@ -1,8 +1,11 @@
-from django.shortcuts import render
+# all required imports
+from django.shortcuts import render, redirect
 from .forms import NewsForm, EvidenceForm, CommentForm, ReportedNewsForm, AdRequestForm
+from .models import News, Reporter, RewardGranted
 import requests
 import json
 
+#urls and headers for apis
 urlForex = "https://currency-conversion-and-exchange-rates.p.rapidapi.com/convert"
 headersforex = {
 	"X-RapidAPI-Key": "bb0db28f73msh13b9827639755afp1f8800jsnaba709482da2",
@@ -15,13 +18,23 @@ headershoroscope = {
 	"X-RapidAPI-Host": "sameer-kumar-aztro-v1.p.rapidapi.com"
 }
 
-urlWeather = "https://weatherapi-com.p.rapidapi.com/current.json"
-headersweather = {
-	"X-RapidAPI-Key": "bb0db28f73msh13b9827639755afp1f8800jsnaba709482da2",
-	"X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com"
-}
-
 urlCurrency = "https://currency-conversion-and-exchange-rates.p.rapidapi.com/symbols"
+
+# views for generating reward based on coins
+def redeem_coins(request, pk):
+    if request.method == "POST":
+        reporter = Reporter.objects.get(id=pk)
+        all_news = News.objects.filter(created_by=reporter)
+        total_reward = 0
+        for news in all_news:
+            current_reward = news.view_count - news.coin_generated
+            total_reward += current_reward
+            news.coin_generated = news.view_count
+            news.save()
+        reward = RewardGranted(user_id =reporter, coins_reedemed = total_reward, monetary_value = total_reward)
+        reward.save()
+        return redirect('index') #coin generated page
+    return redirect('index') #cannot access through get
 
 #the main page of the app.
 def index(request):
@@ -40,11 +53,13 @@ def index(request):
     return render(request, "renderforms.html", context)
 
 
+# view to render login
 def login(request):
     return render(request, "login.html")
 
+
 #the page to add news
-def addNews(request):
+def add_news(request):
     if request.method == "POST":
         form = NewsForm(request.POST)
         if form.is_valid():
@@ -55,18 +70,19 @@ def addNews(request):
 
 
 #handle the reported news
-def reportNews(request, pk):
+def report_news(request, pk):
     pass
 
 #handle comments added in news
-def addComment(request, pk):
+def add_comment(request, pk):
     pass
 
 #handle evidence added for news
-def addEvidence(request, pk):
+def add_evidence(request, pk):
     pass
 
-def requestAd(request):
+#the page to request ads
+def request_ad(request):
     if request.method == "POST":
         form = AdRequestForm(request.POST, request.FILES)
         if form.is_valid():
@@ -77,7 +93,7 @@ def requestAd(request):
     return render(request, "checkformlogic.html")
 
 #get horoscope from api and render result
-def horoscopeapi(request):
+def horoscope_api(request):
     horoscope = ['pisces','aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 'scorpion', 'sagittarius', 'capricorn']
     if request.method == "POST":
         sign = request.POST.get('sign')
@@ -88,20 +104,19 @@ def horoscopeapi(request):
     return render(request,"horoscope.html", {'horoscope':horoscope})
 
 #get weather from api and render result
-def weatherapi(request):
+def weather_api(request):
     cities = [
-        'Kathmandu', 'Pokhara', 'Lumbini', 'Butwal', 'Jhapa', 'Illam', 'Humla', 'Jumla'
+        'Kathmandu', 'Pokhara', 'Lumbini', 'Butwal', 'Biratnagar'
     ]
     if request.method == "POST":
         city = request.POST.get('city')
-        querystring = {"q":city+", NP"}
-        response = requests.request("GET", urlWeather, headers=headersweather, params=querystring)
+        response = requests.request("POST", "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=9cafb52078077411bf7a0a82cbc790c3&units=metric")
         return render(request,"weather.html", {'cities':cities, 'response':response.text})
     
     return render(request,'weather.html', {'cities':cities})
 
 #get forex from api and render result
-def forexapi(request):
+def forex_api(request):
     currency = requests.request("GET", urlCurrency, headers=headersforex)
     currency = json.loads(currency.text)
     if request.method=="POST":
