@@ -1,0 +1,20 @@
+<nav class="mx-44 py-10">
+    <div class="top-bar flex items-center justify-between">
+        <div class="left-part flex items-center gap-5"><i class="fa-solid fa-bars text-4xl"></i>
+            <input type="text" placeholder="Search" class="rounded-full">
+        </div>
+
+        <h1 class="font-heading text-5xl font-bold">Sparta News</h1>
+
+        <div class="user-links flex items-center gap-3">
+            {% if user.is_authenticated %}
+            Hello, {{user.username}} <i class="fa-solid fa-user"></i>
+            {% else %}
+            <a href="{% url 'login' %}" class="rounded-full px-5 py-2">Login</a>
+            <a href="{% url 'register' %}"
+                class="rounded-full bg-black text-white  hover:bg-opacity-80 cursor-pointer transition-colors duration-300   px-5 py-2">Register</a>
+            {% endif %}
+        </div>
+
+    </div>
+</nav>

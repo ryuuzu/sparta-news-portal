@@ -1,11 +1,16 @@
 # all required imports
+from django.http import HttpRequest
 from django.shortcuts import render, redirect
+from django.views.generic import TemplateView
+from django.contrib.auth import authenticate, login
+import django.contrib.messages as messages
+
 from .forms import NewsForm, EvidenceForm, CommentForm, ReportedNewsForm, AdRequestForm
 from .models import News, Reporter, RewardGranted
 import requests
 import json
 
-#urls and headers for apis
+# urls and headers for apis
 urlForex = "https://currency-conversion-and-exchange-rates.p.rapidapi.com/convert"
 headersforex = {
     "X-RapidAPI-Key": "bb0db28f73msh13b9827639755afp1f8800jsnaba709482da2",
@@ -31,10 +36,13 @@ def redeem_coins(request, pk):
             total_reward += current_reward
             news.coin_generated = news.view_count
             news.save()
-        reward = RewardGranted(user_id =reporter, coins_reedemed = total_reward, monetary_value = total_reward)
+        reward = RewardGranted(
+            user_id=reporter, coins_reedemed=total_reward, monetary_value=total_reward
+        )
         reward.save()
-        return redirect('index') #coin generated page
-    return redirect('index') #cannot access through get
+        return redirect("index")  # coin generated page
+    return redirect("index")  # cannot access through get
+
 
 # the main page of the app.
 def index(request):
@@ -53,10 +61,28 @@ def index(request):
     return render(request, "news_portal/renderforms.html", context)
 
 
-# view to render login
-def login(request):
-    return render(request, "news_portal/users/login.html")
+class HomepageView(TemplateView):
+    template_name = "news_portal/home/index.html"
 
+
+class LoginView(TemplateView):
+    template_name = "news_portal/users/login.html"
+
+    def post(self, request: HttpRequest):
+        username = request.POST.get("username", "")
+        password = request.POST.get("password", "")
+        user = authenticate(request, username=username, password=password)
+
+        if user:
+            login(request, user)
+            return redirect("home")
+
+        messages.error(request, "Username/Password Incorrect")
+        return redirect("login")
+
+
+class RegisterView(TemplateView):
+    template_name = "news_portal/users/register.html"
 
 
 # the page to add news
@@ -84,7 +110,9 @@ def add_comment(request, pk):
 def add_evidence(request, pk):
     pass
 
-#the page to request ads
+
+# the page to request ads
+
 
 def request_ad(request):
     if request.method == "POST":
@@ -129,15 +157,21 @@ def horoscope_api(request):
 
 # get weather from api and render result
 def weather_api(request):
-    cities = [
-        'Kathmandu', 'Pokhara', 'Lumbini', 'Butwal', 'Biratnagar'
-    ]
+    cities = ["Kathmandu", "Pokhara", "Lumbini", "Butwal", "Biratnagar"]
     if request.method == "POST":
-        city = request.POST.get('city')
-        response = requests.request("POST", "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=9cafb52078077411bf7a0a82cbc790c3&units=metric")
-        return render(request,"weather.html", {'cities':cities, 'response':response.text})
-    
-    return render(request,'weather.html', {'cities':cities})
+        city = request.POST.get("city")
+        response = requests.request(
+            "POST",
+            "https://api.openweathermap.org/data/2.5/weather?q="
+            + city
+            + "&appid=9cafb52078077411bf7a0a82cbc790c3&units=metric",
+        )
+        return render(
+            request, "weather.html", {"cities": cities, "response": response.text}
+        )
+
+    return render(request, "weather.html", {"cities": cities})
+
 
 # get forex from api and render result
 def forex_api(request):

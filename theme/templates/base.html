@@ -11,12 +11,37 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
-		integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+	<script src="https://kit.fontawesome.com/4a5be43fb2.js" crossorigin="anonymous"></script>
 	{% tailwind_css %}
 </head>
 
 {% block bodyContent %}
+
+{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>\
+<script>
+	{% for message in messages %}
+	const Toast = Swal.mixin({
+		toast: true,
+		position: 'top-end',
+		showConfirmButton: false,
+		timer: 3000,
+		timerProgressBar: true,
+		didOpen: (toast) => {
+			toast.addEventListener('mouseenter', Swal.stopTimer)
+			toast.addEventListener('mouseleave', Swal.resumeTimer)
+		}
+	})
+
+
+	Toast.fire({
+		icon: '{{message.level_tag}}',
+		title: '{{message}}'
+	})
+	{% endfor %}
+</script>
+{% block scripts %}
 
 {% endblock %}
 

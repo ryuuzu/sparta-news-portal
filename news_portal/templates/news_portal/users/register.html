@@ -4,19 +4,24 @@
 {% block formContents %}
 <div class="login flex flex-col items-center w-full justify-center h-3/4">
     <div class="welcome font-heading mb-5">
-        <h1 class="text-4xl font-semibold mb-4">Welcome Back!</h1>
-        <h4>Welcome back! Please enter your details to continue</h4>
+        <h1 class="text-4xl font-semibold mb-4">Hello! Welcome to Sparta News!</h1>
+        <h4>Hello we are happy to have you join us</h4>
     </div>
-    <form id="login-form" class="flex items-center flex-col gap-5 w-1/2" method="post">
+    <form id="login-form" class="register-form-grid w-3/4 gap-3" method="post">
         {% csrf_token %}
         <input class="w-full rounded-lg" type="text" name="username" placeholder="Username" />
+        <input class="w-full rounded-lg" type="email" name="email" placeholder="Email" />
+        <input class="w-full rounded-lg" type="text" name="first_name" placeholder="First Name" />
+        <input class="w-full rounded-lg" type="text" name="middle_name" placeholder="Middle Name" />
+        <input class="w-full rounded-lg" type="text" name="last_name" placeholder="Last Name" />
         <input class="w-full rounded-lg" type="password" name="password" placeholder="Password" />
+        <input class="w-full rounded-lg" type="password" name="password2" placeholder="Password" />
         <input
             class="rounded-lg px-5 py-2 bg-black hover:bg-opacity-80 cursor-pointer transition-colors duration-300 text-white"
-            type="submit" value="Login" />
+            type="submit" value="Register" />
     </form>
     <div class="alternative-login ">
-        <h1 class="text-center mt-5 border-t border-t-black pt-5">Or Log In with:</h>
+        <h1 class="text-center mt-5 border-t border-t-black pt-5">Or Register with:</h>
             <div class="flex gap-6 mt-4">
                 <button
                     class="flex gap-3 items-center bg-black  hover:bg-opacity-80 cursor-pointer transition-colors duration-300 text-white px-5 py-2 rounded-lg"><i
@@ -28,8 +33,7 @@
                     class="flex gap-3 items-center bg-black  hover:bg-opacity-80 cursor-pointer transition-colors duration-300 text-white px-5 py-2 rounded-lg"><i
                         class="fab fa-google"></i><span>Google</span></button>
             </div>
-            <h5 class="text-xs text-center mt-4">New to Sparta News? <a href="{% url 'register' %}"
-                    class="underline text-brown">Sign up Here</a></h5>
+        <h5 class="text-xs text-center mt-4">Already have an account? <a href="{% url 'login' %}" class="underline text-brown">Login Here</a></h5>
     </div>
 </div>
 {% endblock %}
