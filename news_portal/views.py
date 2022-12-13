@@ -1,9 +1,11 @@
-from django.shortcuts import render
+# all required imports
+from django.shortcuts import render, redirect
 from .forms import NewsForm, EvidenceForm, CommentForm, ReportedNewsForm, AdRequestForm
-from .models import News, Reporter
+from .models import News, Reporter, RewardGranted
 import requests
 import json
 
+#urls and headers for apis
 urlForex = "https://currency-conversion-and-exchange-rates.p.rapidapi.com/convert"
 headersforex = {
 	"X-RapidAPI-Key": "bb0db28f73msh13b9827639755afp1f8800jsnaba709482da2",
@@ -18,17 +20,21 @@ headershoroscope = {
 
 urlCurrency = "https://currency-conversion-and-exchange-rates.p.rapidapi.com/symbols"
 
-
+# views for generating reward based on coins
 def redeem_coins(request, pk):
-    reporter = Reporter.objects.get(id=pk)
-    all_news = News.objects.filter(created_by=reporter)
-    total_reward = 0
-    for news in all_news:
-        current_reward = news.view_count - news.coin_generated
-        total_reward += current_reward
-        news.coin_generated = news.view_count
-        news.save()
-    
+    if request.method == "POST":
+        reporter = Reporter.objects.get(id=pk)
+        all_news = News.objects.filter(created_by=reporter)
+        total_reward = 0
+        for news in all_news:
+            current_reward = news.view_count - news.coin_generated
+            total_reward += current_reward
+            news.coin_generated = news.view_count
+            news.save()
+        reward = RewardGranted(user_id =reporter, coins_reedemed = total_reward, monetary_value = total_reward)
+        reward.save()
+        return redirect('index') #coin generated page
+    return redirect('index') #cannot access through get
 
 #the main page of the app.
 def index(request):
@@ -47,8 +53,10 @@ def index(request):
     return render(request, "renderforms.html", context)
 
 
+# view to render login
 def login(request):
     return render(request, "login.html")
+
 
 #the page to add news
 def add_news(request):
@@ -73,6 +81,7 @@ def add_comment(request, pk):
 def add_evidence(request, pk):
     pass
 
+#the page to request ads
 def request_ad(request):
     if request.method == "POST":
         form = AdRequestForm(request.POST, request.FILES)

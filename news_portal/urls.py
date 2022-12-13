@@ -1,6 +1,7 @@
 from django.urls import path, include
 from . import views
 
+# all url patterns to access
 urlpatterns = [
     path('', views.index, name="Home Page"),
     path('forex/', views.forex_api, name="Forex"),
@@ -14,5 +15,5 @@ urlpatterns = [
     path('addcomment/<int:pk>', views.add_comment, name="addcomment"),
     path('addevidence/<int:pk>', views.add_evidence, name="addevidence"),
     path('requestad/', views.request_ad, name="requestad"),
-
+    path('reedemcoin/', views.redeem_coins, name="reedemcoin"),
 ]
