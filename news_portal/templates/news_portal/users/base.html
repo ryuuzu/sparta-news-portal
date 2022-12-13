@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block pageTitle %}
+(News==True) - Login
+{% endblock %}
+
+
+{% block bodyContent %}
+
+<body class="w-screen font-sans overflow-hidden bg-light-gray h-screen">
+    <div class="w-full h-full flex">
+        <div class="w-1/2 h-full bg-tan">
+            <div class="text-3xl font-heading font-bold mx-5 my-4">Sparta News</div>
+            {% block formContents %}
+
+            {% endblock %}
+
+        </div>
+        <div class="w-1/2 flex flex-col justify-evenly">
+            <div class="px-4">
+                <q class="text-2xl"><strong>Sparta Times</strong> is the best place for freelancing news reporters who seek to bring out the truth of
+                    the
+                    society in front
+                    of the public without being liable to any other bodies.
+                </q>
+                <cite class="block mt-3 text-lg">- Best News Report 2069</cite>
+            </div>
+            <img src="{% static 'images/Homepage.png' %}" alt="Homepage of (News==True)"
+                class="w-[1170px] ml-36 ring-8 ring-black rounded-lg">
+        </div>
+    </div>
+
+</body>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'news_portal/users/base.html' %}
+
+
+{% block formContents %}
+<div class="login flex flex-col items-center w-full justify-center h-3/4">
+    <div class="welcome font-heading mb-5">
+        <h1 class="text-4xl font-semibold mb-4">Welcome Back!</h1>
+        <h4>Welcome back! Please enter your details to continue</h4>
+    </div>
+    <form id="login-form" class="flex items-center flex-col w-1/2" method="post">
+        {% csrf_token %}
+        <input class="w-full rounded-lg mb-2.5" type="text" name="username" placeholder="Username" />
+        <input class="w-full rounded-lg mt-2.5" type="password" name="password" placeholder="Password" />
+        <input class="rounded-lg px-5 py-2 bg-black mt-5 text-white" type="submit" value="Login" />
+    </form>
+    <hr>
+    <div class="signup-block">
+        <div class="block-item left">
+            <h1>Sign up with:</h1>
+            <p><small> Do you have an already account?</small>
+            </p>
+        </div>
+        <div class="social-media">
+            <button class="btn_facebook"><i class="fab fa-facebook-f"></i><span>Facebook</span></button>
+            <button class="btn_twitter"><i class="fab fa-twitter"></i><span>Twitter</span></button>
+            <button class="btn_google"><i class="fab fa-google"></i><span>Google</span></button>
+        </div>
+    </div>
+</div>
+{% endblock %}

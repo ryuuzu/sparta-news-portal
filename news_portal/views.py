@@ -41,7 +41,7 @@ def index(request):
 
 
 def login(request):
-    return render(request, "news_portal/login.html")
+    return render(request, "news_portal/users/login.html")
 
 
 # the page to add news
