@@ -86,6 +86,7 @@ class ReporterProfile(models.Model):
     identity_document = models.ImageField(
         verbose_name="Identity Document", null=True, blank=True, upload_to="photos")
 
+
 @receiver(post_save, sender=Reporter)
 @receiver(post_save, sender=Reader)
 def create_all_profiles(sender, instance, **kwargs):
@@ -111,6 +112,8 @@ class News(models.Model):
     edit_date = models.DateTimeField(auto_now=True)
     is_anonymous = models.BooleanField(default=False)
     view_count = models.BigIntegerField(default=0)
+    coin_generated = models.BigIntegerField(default=0)
+
 
 class Evidence(models.Model):
     news_id = models.OneToOneField(News, on_delete=models.CASCADE)
@@ -118,10 +121,12 @@ class Evidence(models.Model):
     file1 = models.FileField(upload_to="documents")
     file2 = models.FileField(blank=True, null=True, upload_to="documents")
 
+
 class Comment(models.Model):
     news_id = models.OneToOneField(News, on_delete=models.CASCADE)
     user_id = models.ForeignKey(Reader, on_delete=models.CASCADE)
     comment = models.TextField()
+
 
 class Ad(models.Model):
     company = models.CharField(max_length=250)
@@ -131,9 +136,16 @@ class Ad(models.Model):
     start_date_time = models.DateTimeField()
     end_date_time = models.DateTimeField()
 
+
 class ReportedNews(models.Model):
     news_id = models.OneToOneField(News, on_delete=models.CASCADE)
     user_id = models.ForeignKey(Reader, on_delete=models.CASCADE)
     description = models.TextField()
     date_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=50, choices=REPORTED_STATUS)
+
+
+class RewardGranted(models.Model):
+    user_id = models.ForeignKey(Reporter, on_delete=models.CASCADE)
+    coins_redeemed = models.CharField(max_length=25)
+    monetary_value = models.CharField(max_length=25)

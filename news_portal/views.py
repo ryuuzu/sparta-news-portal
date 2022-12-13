@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .forms import NewsForm, EvidenceForm, CommentForm, ReportedNewsForm, AdRequestForm
+from .models import News, Reporter
 import requests
 import json
 
@@ -17,6 +18,17 @@ headershoroscope = {
 
 urlCurrency = "https://currency-conversion-and-exchange-rates.p.rapidapi.com/symbols"
 
+
+def redeem_coins(request, pk):
+    reporter = Reporter.objects.get(id=pk)
+    all_news = News.objects.filter(created_by=reporter)
+    total_reward = 0
+    for news in all_news:
+        current_reward = news.view_count - news.coin_generated
+        total_reward += current_reward
+        news.coin_generated = news.view_count
+        news.save()
+    
 
 #the main page of the app.
 def index(request):
@@ -39,7 +51,7 @@ def login(request):
     return render(request, "login.html")
 
 #the page to add news
-def addNews(request):
+def add_news(request):
     if request.method == "POST":
         form = NewsForm(request.POST)
         if form.is_valid():
@@ -50,18 +62,18 @@ def addNews(request):
 
 
 #handle the reported news
-def reportNews(request, pk):
+def report_news(request, pk):
     pass
 
 #handle comments added in news
-def addComment(request, pk):
+def add_comment(request, pk):
     pass
 
 #handle evidence added for news
-def addEvidence(request, pk):
+def add_evidence(request, pk):
     pass
 
-def requestAd(request):
+def request_ad(request):
     if request.method == "POST":
         form = AdRequestForm(request.POST, request.FILES)
         if form.is_valid():
@@ -72,7 +84,7 @@ def requestAd(request):
     return render(request, "checkformlogic.html")
 
 #get horoscope from api and render result
-def horoscopeapi(request):
+def horoscope_api(request):
     horoscope = ['pisces','aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 'scorpion', 'sagittarius', 'capricorn']
     if request.method == "POST":
         sign = request.POST.get('sign')
@@ -83,7 +95,7 @@ def horoscopeapi(request):
     return render(request,"horoscope.html", {'horoscope':horoscope})
 
 #get weather from api and render result
-def weatherapi(request):
+def weather_api(request):
     cities = [
         'Kathmandu', 'Pokhara', 'Lumbini', 'Butwal', 'Biratnagar'
     ]
@@ -95,7 +107,7 @@ def weatherapi(request):
     return render(request,'weather.html', {'cities':cities})
 
 #get forex from api and render result
-def forexapi(request):
+def forex_api(request):
     currency = requests.request("GET", urlCurrency, headers=headersforex)
     currency = json.loads(currency.text)
     if request.method=="POST":
