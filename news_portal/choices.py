@@ -1,9 +1,10 @@
 from django.db.models import TextChoices
 
-class Types(TextChoices):
-        ADMIN = "Admin", "ADMIN"
-        READER = "Reader", "READER"
-        REPORTER = "Reporter", "REPORTER"
+
+class UserTypes(TextChoices):
+    ADMIN = "Admin", "ADMIN"
+    READER = "Reader", "READER"
+    REPORTER = "Reporter", "REPORTER"
 
 
 GENDER_CHOICES = (
@@ -17,21 +18,22 @@ SOURCE_CHOICES = (
     ("agency", "News Agency"),
 )
 
-NEWS_CATEGORY = (
-    ("sports", "Sports"),
-    ("politics", "Politics"),
-    ("finance", "Finance"),
-    ("international", "International"),
-)
+
+class NewsCategory(TextChoices):
+    SPORTS = "sports", "Sports"
+    POLITICS = "politics", "Politics"
+    FINANACE = "finance", "Finance"
+    INTERNATIONAL = "international", "International"
+
 
 PACKAGE_CHOICES = (
-    ('bronz', 'Bronz'),
-    ('silver', 'Silver'),
-    ('gold', 'Gold'),
+    ("bronz", "Bronz"),
+    ("silver", "Silver"),
+    ("gold", "Gold"),
 )
 
 REPORTED_STATUS = (
-    ('pending', 'Pending'),
-    ('denied', 'Denied'),
-    ('accepted', 'Accepted'),
+    ("pending", "Pending"),
+    ("denied", "Denied"),
+    ("accepted", "Accepted"),
 )

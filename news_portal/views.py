@@ -1,11 +1,13 @@
 # all required imports
+from typing import Any
 from django.http import HttpRequest
-from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
+from django.shortcuts import get_object_or_404, render, redirect
+from django.views.generic import TemplateView, DetailView
 from django.contrib.auth import authenticate, login
 import django.contrib.messages as messages
 
 from .forms import NewsForm, EvidenceForm, CommentForm, ReportedNewsForm, AdRequestForm
+from .choices import NewsCategory
 from .models import News, Reporter, RewardGranted
 import requests
 import json
@@ -61,8 +63,35 @@ def index(request):
     return render(request, "news_portal/renderforms.html", context)
 
 
+def view_news(request: HttpRequest, slug):
+    news = get_object_or_404(News, slug=slug)
+    context = {"news": news}
+    return render(request, "news_portal/news/index.html", context)
+
+
 class HomepageView(TemplateView):
     template_name = "news_portal/home/index.html"
+
+    def get(self, request: HttpRequest):
+        context = {
+            "news_categories": NewsCategory.choices,
+            "active_cat": "news",
+        }
+        return render(request, self.template_name, context)
+
+
+class CategoryView(TemplateView):
+    template_name = "news_portal/home/index.html"
+
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any):
+        if kwargs["cat_name"] not in NewsCategory.values:
+            messages.error(request, "Category not found!")
+            return redirect("home")
+        context = {
+            "news_categories": NewsCategory.choices,
+            "active_cat": kwargs["cat_name"],
+        }
+        return render(request, self.template_name, context)
 
 
 class LoginView(TemplateView):

@@ -1,8 +1,6 @@
-<nav class="mx-44 py-10">
+<nav class="mx-20 px-24 pt-10 pb-5 border-b-2 border-b-black">
     <div class="top-bar flex items-center justify-between">
-        <div class="left-part flex items-center gap-5"><i class="fa-solid fa-bars text-4xl"></i>
-            <input type="text" placeholder="Search" class="rounded-full">
-        </div>
+        <input type="text" placeholder="Search" class="rounded-full">
 
         <h1 class="font-heading text-5xl font-bold">Sparta News</h1>
 
@@ -12,9 +10,16 @@
             {% else %}
             <a href="{% url 'login' %}" class="rounded-full px-5 py-2">Login</a>
             <a href="{% url 'register' %}"
-                class="rounded-full bg-black text-white  hover:bg-opacity-80 cursor-pointer transition-colors duration-300   px-5 py-2">Register</a>
+                class="rounded-full bg-black text-white  hover:bg-opacity-80 cursor-pointer transition-colors duration-300 px-5 py-2">Register</a>
             {% endif %}
         </div>
 
+    </div>
+    <div class="bottom-bar flex mx-auto justify-evenly mt-5 w-1/2">
+        <a href="{% url 'home' %}" {% if active_cat == 'news' %} class="border-b-4 border-b-black" {% endif %}>News</a>
+        {% for cat_value, cat_label in news_categories %}
+        <a href="{% url 'cat_view' cat_value %}" {% if active_cat == cat_value %} class="border-b-4 border-b-black"
+            {% endif %}>{{cat_label}}</a>
+        {% endfor %}
     </div>
 </nav>

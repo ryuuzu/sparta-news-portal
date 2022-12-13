@@ -3,7 +3,7 @@ from django.contrib.auth import models
 from django.db import models
 
 # Local Imports
-from .choices import Types
+from .choices import UserTypes
 # from .models import AppUser
 
 
@@ -44,7 +44,7 @@ class ReporterManager(models.Manager):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        result = queryset.filter(Types.REPORTER)
+        result = queryset.filter(UserTypes.REPORTER)
         return result
 
 class ReaderManager(models.Manager):
@@ -61,5 +61,5 @@ class ReaderManager(models.Manager):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        result = queryset.filter(Types.READER)
+        result = queryset.filter(UserTypes.READER)
         return result
