@@ -91,6 +91,15 @@ class HomepageView(TemplateView):
         return render(request, self.template_name, context)
 
 
+class CreateNewsView(TemplateView):
+    template_name = "news_portal/news/create.html"
+
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any):
+        create_form = NewsForm()
+        context = {"form": create_form}
+        return render(request, self.template_name, context)
+
+
 class CategoryView(TemplateView):
     template_name = "news_portal/home/index.html"
 

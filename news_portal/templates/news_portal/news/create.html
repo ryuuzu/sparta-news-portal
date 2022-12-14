@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block pageTitle %}
+Sparta News - {{news.title}}
+{% endblock %}
+
+
+{% block bodyContent %}
+
+<body class="bg-tan mx-20 px-24">
+    <form action="" method="post" class="flex gap-5 flex-col my-10">
+        <h1 class="text-center">Post News</h1>
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="field-wrapper flex flex-col">
+            <label for="{{field.id_for_label}}">{{field.label}}: </label>
+            {% render_field field placeholder=field.label %}
+        </div>
+        {% endfor %}
+        <input type="submit" value="Post"
+            class="bg-black text-white w-fit hover:bg-opacity-80 cursor-pointer transition-colors duration-300 px-5 py-2" />
+    </form>
+</body>
+
+{% endblock %}
