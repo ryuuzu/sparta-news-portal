@@ -8,16 +8,16 @@ Sparta News - {{news.title}}
 
 {% block bodyContent %}
 
-<body class="bg-tan">
+<body class="bg-tan mx-20 px-24 ">
     {% include 'navbar.html' %}
-    <div class="container px-24 mx-auto flex gap-3 mt-5">
+    <div class="container px-24 mx-auto flex gap-3">
         <div class="news-container gap-3 w-auto flex flex-col">
             <div class="headings">
                 <h1 class="font-heading font-semibold text-5xl">{{news.title}}</h1>
                 <h1 class="font-heading font-medium text-lg mt-2">{{news.sub_title}}</h1>
             </div>
             <div class="author text-xs">
-                {{news.upload_date}} | <strong>{{news.created_by.first_name}} {{news.created_by.last_name}}</strong>
+                {{news.upload_date}} | <strong>{{news.created_by.first_name}} {{news.created_by.last_name}}</strong> ({{news.view_count}} view{{news.view_count|pluralize}})
             </div>
             <div class="news-contents">
 
@@ -39,7 +39,7 @@ Sparta News - {{news.title}}
                 </div>
                 {% endif %}
 
-                <p class="font-roman">{{news.body|linebreaksbr}}</p>
+                <p class="font-roman">{{news.location}} {{news.body|linebreaksbr}}</p>
             </div>
         </div>
         <aside>

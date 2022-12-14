@@ -1,0 +1,68 @@
+<div class="w-full border-b-2 border-b-black border-opacity-50 pb-28">
+
+    {% for news in breaking_news %}
+    <div class="breaking-news mx-auto w-fit flex-col relative">
+        <img src="{{news.image1.url}}" class="h-[500px] w-[1000px] object-cover rounded-lg" alt="">
+        <div
+            class="absolute bg-white w-4/5 py-10 px-28 rounded-lg gap-5 -bottom-20 left-1/2 -translate-x-1/2 flex flex-col">
+            <div class="author text-xs"><strong>{{news.created_by.first_name}} {{news.created_by.last_name}}</strong> |
+                {{news.upload_date|date:'F j, Y'}}</div>
+            <h1 class="font-heading font-bold text-4xl leading-tight">{{news.title}}</h1>
+            <div class="text-sm opacity-75">{{news.body|truncatechars:500}}</div>
+            <div class="flex justify-between items-center">
+                <div class="navigator">
+                    {% for newses in breaking_news %}
+                    {% if newses.slug == news.slug %}
+                    <i class="fa-solid fa-circle text-xs"></i>
+                    {% else %}
+                    <i class="fa-regular fa-circle text-xs"></i>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <a href="{% url 'view_news' news.slug %}" class="text-xs underline">Read More >></a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+
+{% block breaking_news_script %}
+<script>
+    const allBreakingNews = document.querySelectorAll(".breaking-news");
+    const breakingNewsNavigators = document.querySelectorAll(".navigator");
+    let currentPage = 0;
+
+    function switchToPage(page) {
+        allBreakingNews.forEach((breakingNews, index) => {
+            if (index === page) {
+                breakingNews.style.display = "flex";
+            } else {
+                breakingNews.style.display = "none";
+            }
+        })
+    }
+
+    breakingNewsNavigators.forEach((breakingNewsNavigator) => Array.from(breakingNewsNavigator.children).forEach((breakingNews, index) => {
+        breakingNews.addEventListener('click', (e) => {
+            switchToPage(index);
+        })
+    }))
+
+    function increaseCurrentPage() {
+        if (currentPage < (allBreakingNews.length - 1)) {
+            currentPage++;
+        } else {
+            currentPage = 0;
+        }
+    }
+
+    switchToPage(currentPage);
+    setInterval(() => {
+        increaseCurrentPage();
+        switchToPage(currentPage);
+    }, 5000);
+
+</script>
+{% endblock %}

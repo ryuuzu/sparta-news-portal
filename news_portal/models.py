@@ -141,7 +141,7 @@ def create_all_profiles(sender, instance, **kwargs):
 # model to create news
 class News(models.Model):
     slug = models.SlugField()
-    created_by = models.OneToOneField(Reporter, on_delete=models.PROTECT)
+    created_by = models.ForeignKey(Reporter, on_delete=models.PROTECT)
     title = models.CharField(max_length=1000)
     sub_title = models.CharField(max_length=1000)
     body = models.TextField()

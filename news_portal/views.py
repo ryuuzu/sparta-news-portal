@@ -65,6 +65,8 @@ def index(request):
 
 def view_news(request: HttpRequest, slug):
     news = get_object_or_404(News, slug=slug)
+    news.view_count += 1
+    news.save()
     context = {
         "news": news,
         "news_categories": NewsCategory.choices,
@@ -77,9 +79,14 @@ class HomepageView(TemplateView):
     template_name = "news_portal/home/index.html"
 
     def get(self, request: HttpRequest):
+        breaking_news = [
+            News.objects.get(slug="melamchi-wow"),
+            News.objects.get(slug="india-china-clash"),
+        ]
         context = {
             "news_categories": NewsCategory.choices,
             "active_cat": "news",
+            "breaking_news": breaking_news,
         }
         return render(request, self.template_name, context)
 

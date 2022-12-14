@@ -8,7 +8,7 @@ from .views import CategoryView, LoginView, RegisterView, HomepageView, view_new
 urlpatterns = [
     path("", HomepageView.as_view(), name="home"),
     path("category/<str:cat_name>/", CategoryView.as_view(), name="cat_view"),
-    path('news/<slug:slug>', view_news, name=''),
+    path('news/<slug:slug>', view_news, name='view_news'),
     path("forex/", views.forex_api, name="Forex"),
     path("horoscope/", views.horoscope_api, name="Horoscope"),
     path("weather/", views.weather_api, name="Weather"),
