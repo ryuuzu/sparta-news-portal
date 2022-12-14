@@ -16,18 +16,76 @@ Sparta News - {{news.title}}
                 <h1 class="font-heading font-semibold text-5xl">{{news.title}}</h1>
                 <h1 class="font-heading font-medium text-lg mt-2">{{news.sub_title}}</h1>
             </div>
-            <div class="author text-sm">
+            <div class="author text-xs">
                 {{news.upload_date}} | <strong>{{news.created_by.first_name}} {{news.created_by.last_name}}</strong>
             </div>
             <div class="news-contents">
-                {{news.body}}
+
+                {% if news.image1 or news.image2 or news.image3 %}
+                <div id="news-image-holder" class="my-2 w-3/4 mx-auto h-fit relative">
+                    <i class="fa-solid fa-arrow-left absolute z-20 text-white left-2 top-1/2 bg-black p-3 rounded-full bg-opacity-80 hover:bg-opacity-40 cursor-pointer transition-all duration-300 -translate-y-1/2"
+                        id="browse-left"></i>
+                    {% if news.image1 %}
+                    <img src="{{news.image1.url}}" alt="" class="z-0">
+                    {% endif %}
+                    {% if news.image2 %}
+                    <img src="{{news.image2.url}}" alt="" class="z-0">
+                    {% endif %}
+                    {% if news.image3 %}
+                    <img src="{{news.image3.url}}" alt="" class="z-0">
+                    {% endif %}
+                    <i class="fa-solid fa-arrow-right absolute z-20 text-white right-2 top-1/2 bg-black p-3 rounded-full bg-opacity-80 hover:bg-opacity-40 cursor-pointer transition-all duration-300 -translate-y-1/2"
+                        id="browse-right"></i>
+                </div>
+                {% endif %}
+
+                <p class="font-roman">{{news.body|linebreaksbr}}</p>
             </div>
         </div>
         <aside>
-            <div class="ad-banner bg-black w-smallAd">
+            <div class="ad-banner bg-black w-smallAd text-white h-44">
                 Place your Advertisement here.
             </div>
         </aside>
     </div>
 </body>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    const newsImagesHolder = document.querySelector("#news-image-holder")
+    const newsImages = newsImagesHolder.querySelectorAll('img')
+    const nextImageBtn = document.querySelector("#browse-right")
+    const previousImageBtn = document.querySelector("#browse-left")
+    let activeImage = 0;
+
+    nextImageBtn.addEventListener('click', (e) => {
+        if (activeImage === (newsImages.length - 1)) {
+            return;
+        }
+        activeImage++;
+        updateImageView();
+    })
+
+    previousImageBtn.addEventListener('click', (e) => {
+        if (activeImage === 0) {
+            return;
+        }
+        activeImage--;
+        updateImageView();
+    })
+
+    function updateImageView() {
+        newsImages.forEach((newsImage, index) => {
+            if (index === activeImage) {
+                newsImage.style.display = "block";
+            }
+            else {
+                newsImage.style.display = "none";
+            }
+        })
+    }
+    updateImageView();
+</script>
 {% endblock %}
