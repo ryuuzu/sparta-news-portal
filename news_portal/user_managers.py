@@ -44,7 +44,7 @@ class ReporterManager(models.Manager):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        result = queryset.filter(UserTypes.REPORTER)
+        result = queryset.filter(user_type=UserTypes.REPORTER)
         return result
 
 class ReaderManager(models.Manager):
@@ -61,5 +61,5 @@ class ReaderManager(models.Manager):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        result = queryset.filter(UserTypes.READER)
+        result = queryset.filter(user_type=UserTypes.READER)
         return result

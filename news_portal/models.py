@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser
 # Signal Imports
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.urls import reverse
 
 # Local Imports
 from .choices import (
@@ -19,7 +20,7 @@ from .user_managers import ReaderManager, ReporterManager, PortalUserManager
 
 # Base user model
 class PortalUser(AbstractBaseUser):
-    type = models.CharField(
+    user_type = models.CharField(
         max_length=25, choices=UserTypes.choices, default=UserTypes.READER
     )
 
@@ -77,8 +78,8 @@ class PortalUser(AbstractBaseUser):
         return True
 
     def save(self, *args, **kwargs):
-        if not self.type or self.type == None:
-            self.type = UserTypes.ADMIN
+        if not self.user_type or self.user_type == None:
+            self.user_type = UserTypes.ADMIN
         return super().save(*args, **kwargs)
 
 
@@ -155,6 +156,12 @@ class News(models.Model):
     is_anonymous = models.BooleanField(default=False)
     view_count = models.BigIntegerField(default=0)
     coin_generated = models.BigIntegerField(default=0)
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse("article_detail", args=[str(self.id)])
 
 
 # models to create evidence

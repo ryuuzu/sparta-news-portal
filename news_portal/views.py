@@ -65,7 +65,11 @@ def index(request):
 
 def view_news(request: HttpRequest, slug):
     news = get_object_or_404(News, slug=slug)
-    context = {"news": news}
+    context = {
+        "news": news,
+        "news_categories": NewsCategory.choices,
+        "active_cat": news.category,
+    }
     return render(request, "news_portal/news/index.html", context)
 
 

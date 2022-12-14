@@ -58,6 +58,9 @@ module.exports = {
 				"dark-brown": "#443827",
 				brown: "#8A614F",
 			},
+			width: {
+				smallAd: "350px",
+			},
 		},
 	},
 	plugins: [
