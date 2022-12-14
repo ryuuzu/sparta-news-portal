@@ -139,7 +139,7 @@ class RegisterView(TemplateView):
             login(request, user)
             return redirect("home")
         messages.error(request, "Username/Password Incorrect")
-        return redirect("login")
+        return redirect("register")
     
     def get(self, request:HttpRequest):
         return redirect('register', {'form':UserForm()})
