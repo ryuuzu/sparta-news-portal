@@ -49,7 +49,10 @@ INSTALLED_APPS = [
     "theme",
     "django_browser_reload",
 
-    # Other
+    # Other Plugins
+    "widget_tweaks",
+
+    # Apps
     "news_portal",
 ]
 

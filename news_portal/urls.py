@@ -2,13 +2,21 @@ from django.urls import path, include, re_path
 from django.contrib.auth.views import LogoutView
 from . import views
 
-from .views import CategoryView, LoginView, RegisterView, HomepageView, view_news
+from .views import (
+    CategoryView,
+    CreateNewsView,
+    LoginView,
+    RegisterView,
+    HomepageView,
+    view_news,
+)
 
 # all url patterns to access
 urlpatterns = [
     path("", HomepageView.as_view(), name="home"),
     path("category/<str:cat_name>/", CategoryView.as_view(), name="cat_view"),
-    path('news/<slug:slug>', view_news, name=''),
+    path("news/create/", CreateNewsView.as_view(), name="create_news"),
+    path("news/<slug:slug>/", view_news, name="view_news"),
     path("forex/", views.forex_api, name="Forex"),
     path("horoscope/", views.horoscope_api, name="Horoscope"),
     path("weather/", views.weather_api, name="Weather"),
