@@ -6,9 +6,9 @@ from django.views.generic import TemplateView, DetailView
 from django.contrib.auth import authenticate, login
 import django.contrib.messages as messages
 
-from .forms import NewsForm, EvidenceForm, CommentForm, ReportedNewsForm, AdRequestForm
+from .forms import NewsForm, EvidenceForm, CommentForm, ReportedNewsForm, AdRequestForm, UserForm
 from .choices import NewsCategory
-from .models import News, Reporter, RewardGranted
+from .models import News, Reporter, RewardGranted, PortalUser
 import requests
 import json
 
@@ -116,7 +116,17 @@ class LoginView(TemplateView):
 
 class RegisterView(TemplateView):
     template_name = "news_portal/users/register.html"
-
+    def post(self, request: HttpRequest):
+        user = UserForm(request.POST)
+        if user.is_valid():
+            user.save()
+            login(request, user)
+            return redirect("home")
+        messages.error(request, "Username/Password Incorrect")
+        return redirect("login")
+    
+    def get(self, request:HttpRequest):
+        return redirect('register', {'form':UserForm()})
 
 # the page to add news
 def add_news(request):

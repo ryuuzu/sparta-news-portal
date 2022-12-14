@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import News, Evidence, Comment, ReportedNews, Ad
+from .models import News, Evidence, Comment, ReportedNews, Ad, PortalUser
 from django import forms
 
 #date picker type
@@ -39,3 +39,9 @@ class AdRequestForm(ModelForm):
             'start_date_time':forms.DateTimeInput(format='%Y-%m-%dT%H:%M:%S', attrs={'type': 'datetime-local'}),
             'end_date_time':forms.DateTimeInput(format='%Y-%m-%dT%H:%M:%S', attrs={'type': 'datetime-local'})
         }
+
+
+class UserForm(ModelForm):
+    class Meta:
+        model = PortalUser
+        fields = ["username", "password", "password", "email", "first_name", "middle_name", "last_name"]
