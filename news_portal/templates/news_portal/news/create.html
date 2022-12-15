@@ -3,24 +3,64 @@
 {% load widget_tweaks %}
 
 {% block pageTitle %}
-Sparta News - {{news.title}}
+Sparta News - Create Post
 {% endblock %}
 
 
 {% block bodyContent %}
 
 <body class="bg-tan mx-20 px-24">
-    <form action="" method="post" class="flex gap-5 flex-col my-10">
-        <h1 class="text-center">Post News</h1>
+    <form action="" method="post" id="news-post-form" class="flex gap-5 flex-col mx-56 my-10">
+        <h1 class="text-center font-heading text-6xl font-bold">Post News</h1>
         {% csrf_token %}
-        {% for field in form %}
-        <div class="field-wrapper flex flex-col">
-            <label for="{{field.id_for_label}}">{{field.label}}: </label>
-            {% render_field field placeholder=field.label %}
+        <div class="field-wrapper flex flex-col" id="wrapper-{{form.title.name}}">
+            <label for="{{form.title.id_for_label}}">{{form.title.label}}: </label>
+            {% render_field form.title placeholder='XYZ just happened...' %}
         </div>
-        {% endfor %}
+        <div class="just-another-wrapper gap-10 flex">
+            <div class="field-wrapper flex flex-col flex-grow" id="wrapper-{{form.sub_title.name}}">
+                <label for="{{form.sub_title.id_for_label}}">{{form.sub_title.label}}: </label>
+                {% render_field form.sub_title placeholder='ABC did XYZ...' %}
+            </div>
+            <div class="field-wrapper flex flex-col flex-grow" id="wrapper-{{form.location.name}}">
+                <label for="{{form.location.id_for_label}}">{{form.location.label}}: </label>
+                {% render_field form.location placeholder='Kathmandu' %}
+            </div>
+        </div>
+        <div class="field-wrapper flex flex-col" id="wrapper-{{form.body.name}}">
+            <label for="{{form.body.id_for_label}}">{{form.body.label}}: </label>
+            {% render_field form.body placeholder='The story unfolds...' %}
+        </div>
+        <div class="images-upload flex justify-between">
+            <div class="field-wrapper flex flex-col" id="wrapper-{{form.image1.name}}">
+                <label for="{{form.image1.id_for_label}}">{{form.image1.label}}: </label>
+                {% render_field form.image1 placeholder=form.image1.label %}
+            </div>
+            <div class="field-wrapper flex flex-col" id="wrapper-{{form.image2.name}}">
+                <label for="{{form.image2.id_for_label}}">{{form.image2.label}}: </label>
+                {% render_field form.image2 placeholder=form.image2.label %}
+            </div>
+            <div class="field-wrapper flex flex-col" id="wrapper-{{form.image3.name}}">
+                <label for="{{form.image3.id_for_label}}">{{form.image3.label}}: </label>
+                {% render_field form.image3 placeholder=form.image3.label %}
+            </div>
+        </div>
+        <div class="selection-choices flex gap-10">
+            <div class="field-wrapper flex flex-col flex-grow" id="wrapper-{{form.source.name}}">
+                <label for="{{form.source.id_for_label}}">{{form.source.label}}: </label>
+                {% render_field form.source %}
+            </div>
+            <div class="field-wrapper flex flex-col flex-grow" id="wrapper-{{form.category.name}}">
+                <label for="{{form.category.id_for_label}}">{{form.category.label}}: </label>
+                {% render_field form.category %}
+            </div>
+        </div>
+        <div class="field-wrapper flex items-center gap-3" id="wrapper-{{form.is_anonymous.name}}">
+            {% render_field form.is_anonymous %}
+            <label for="{{form.is_anonymous.id_for_label}}">{{form.is_anonymous.label}}</label>
+        </div>
         <input type="submit" value="Post"
-            class="bg-black text-white w-fit hover:bg-opacity-80 cursor-pointer transition-colors duration-300 px-5 py-2" />
+            class="bg-black text-white w-fit rounded-lg hover:bg-opacity-80 cursor-pointer transition-colors duration-300 px-5 py-2" />
     </form>
 </body>
 

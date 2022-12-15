@@ -4,6 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Style for News Post Form */
+#news-post-form .field-wrapper input[type="text"],
+#news-post-form .field-wrapper textarea,
+#news-post-form .field-wrapper select,
+#news-post-form .field-wrapper input[type="checkbox"] {
+	@apply rounded-lg border-none bg-white text-sm checked:bg-brown focus:ring-brown;
+}
+
+/* Custom Grid styles for Registration form */
 .register-form-grid {
 	display: grid;
 	grid-template-columns: 2fr 1fr 1fr 2fr;

@@ -1,9 +1,11 @@
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth import models
 from django.db import models
+from slugify import slugify
 
 # Local Imports
 from .choices import UserTypes
+
 # from .models import AppUser
 
 
@@ -13,7 +15,7 @@ class PortalUserManager(BaseUserManager):
             raise ValueError("Manager: Username cannot be empty!!!")
         if not password:
             raise ValueError("Manager: Password cannot be null!!!")
-        user = self.model(username=username )
+        user = self.model(username=username)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -46,6 +48,13 @@ class ReporterManager(models.Manager):
         queryset = super().get_queryset()
         result = queryset.filter(user_type=UserTypes.REPORTER)
         return result
+
+
+class NewsManager(models.Manager):
+    def create(self, **kwargs):
+        slug = slugify(kwargs["title"])
+        return super().create(slug=slug, **kwargs)
+
 
 class ReaderManager(models.Manager):
     def create_user(self, username, password):

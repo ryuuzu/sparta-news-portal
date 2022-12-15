@@ -5,7 +5,13 @@
         <img src="{{news.image1.url}}" class="h-[500px] w-[1000px] object-cover rounded-lg" alt="">
         <div
             class="absolute bg-white w-4/5 py-10 px-28 rounded-lg gap-5 -bottom-20 left-1/2 -translate-x-1/2 flex flex-col">
-            <div class="author text-xs"><strong>{{news.created_by.first_name}} {{news.created_by.last_name}}</strong> |
+            <div class="author text-xs"><strong>
+                    {% if news.is_anonymous %}
+                    Anonymous
+                    {% else %}
+                    {{news.created_by.first_name}} {{news.created_by.last_name}}
+                    {% endif %}
+                </strong> |
                 {{news.upload_date|date:'F j, Y'}}</div>
             <h1 class="font-heading font-bold text-4xl leading-tight">{{news.title}}</h1>
             <div class="text-sm opacity-75">{{news.body|truncatechars:500}}</div>
