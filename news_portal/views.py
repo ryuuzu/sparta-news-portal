@@ -1,5 +1,6 @@
 # all required imports
 from typing import Any
+from venv import create
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import TemplateView, DetailView
@@ -102,11 +103,10 @@ class CreateNewsView(TemplateView):
     def post(self, request: HttpRequest):
         create_form = NewsForm(request.POST)
         if create_form.is_valid():
-            news_data = {
-                
-            }
-            return redirect()
-        
+            news_data = create_form.cleaned_data.copy()
+            news_data["created_by"] = request.user
+            news = News.objects.create(**news_data)
+            return redirect("view_news", slug=news.slug)
 
 
 class CategoryView(TemplateView):

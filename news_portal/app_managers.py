@@ -1,5 +1,6 @@
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth import models
+from django.contrib.auth.hashers import make_password
 from django.db import models
 from slugify import slugify
 
@@ -43,6 +44,12 @@ class ReporterManager(models.Manager):
         user.set_password(password)
         user.save(using=self._db)
         return user
+
+    def create(self, **kwargs):
+        print(kwargs)
+        password = kwargs["password"]
+        kwargs["password"] = make_password(password)
+        return super().create(**kwargs)
 
     def get_queryset(self):
         queryset = super().get_queryset()

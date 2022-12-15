@@ -23,6 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-yj%-y@%jk*7u!vt*_nb$vxpiyke!k(7&-hwj_4z-z95rd*kt+%"
 
+# Implement Custom User
+AUTH_USER_MODEL = "news_portal.PortalUser"
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
