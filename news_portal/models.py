@@ -15,7 +15,7 @@ from .choices import (
     PACKAGE_CHOICES,
     REPORTED_STATUS,
 )
-from .user_managers import ReaderManager, ReporterManager, PortalUserManager
+from .app_managers import NewsManager, ReaderManager, ReporterManager, PortalUserManager
 
 
 # Base user model
@@ -140,22 +140,32 @@ def create_all_profiles(sender, instance, **kwargs):
 
 # model to create news
 class News(models.Model):
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     created_by = models.ForeignKey(Reporter, on_delete=models.PROTECT)
     title = models.CharField(max_length=1000, verbose_name="Title")
     sub_title = models.CharField(max_length=1000, verbose_name="Sub Title")
     body = models.TextField(verbose_name="Body")
-    image1 = models.ImageField(blank=True, null=True, upload_to="photos", verbose_name="Images")
-    image2 = models.ImageField(blank=True, null=True, upload_to="photos", verbose_name="Images")
-    image3 = models.ImageField(blank=True, null=True, upload_to="photos", verbose_name="Images")
+    image1 = models.ImageField(
+        blank=True, null=True, upload_to="photos", verbose_name="Images"
+    )
+    image2 = models.ImageField(
+        blank=True, null=True, upload_to="photos", verbose_name="Images"
+    )
+    image3 = models.ImageField(
+        blank=True, null=True, upload_to="photos", verbose_name="Images"
+    )
     source = models.CharField(max_length=100, choices=SOURCE_CHOICES)
     location = models.CharField(max_length=100)
     category = models.CharField(max_length=100, choices=NewsCategory.choices)
     upload_date = models.DateTimeField(auto_now_add=True)
     edit_date = models.DateTimeField(auto_now=True)
-    is_anonymous = models.BooleanField(default=False, verbose_name="Report Anonymously?")
+    is_anonymous = models.BooleanField(
+        default=False, verbose_name="Report Anonymously?"
+    )
     view_count = models.BigIntegerField(default=0)
     coin_generated = models.BigIntegerField(default=0)
+
+    objects = NewsManager()
 
     def __str__(self):
         return self.title

@@ -99,6 +99,15 @@ class CreateNewsView(TemplateView):
         context = {"form": create_form}
         return render(request, self.template_name, context)
 
+    def post(self, request: HttpRequest):
+        create_form = NewsForm(request.POST)
+        if create_form.is_valid():
+            news_data = {
+                
+            }
+            return redirect()
+        
+
 
 class CategoryView(TemplateView):
     template_name = "news_portal/home/index.html"

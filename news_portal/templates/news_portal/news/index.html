@@ -17,7 +17,13 @@ Sparta News - {{news.title}}
                 <h1 class="font-heading font-medium text-lg mt-2">{{news.sub_title}}</h1>
             </div>
             <div class="author text-xs">
-                {{news.upload_date}} | <strong>{{news.created_by.first_name}} {{news.created_by.last_name}}</strong> ({{news.view_count}} view{{news.view_count|pluralize}})
+                {{news.upload_date}} | <strong>
+                    {% if news.is_anonymous %}
+                    Anonymous
+                    {% else %}
+                    {{news.created_by.first_name}} {{news.created_by.last_name}}
+                    {% endif %}
+                </strong> ({{news.view_count}} view{{news.view_count|pluralize}})
             </div>
             <div class="news-contents">
 
