@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import News, Evidence, Comment, ReportedNews, Ad, PortalUser
+from .models import News, Evidence, Comment, ReportedNews, Ad, PortalUser, ReaderProfile, ReporterProfile
 from django import forms
 
 #date picker type
@@ -45,3 +45,16 @@ class UserForm(ModelForm):
     class Meta:
         model = PortalUser
         fields = ["username", "password", "password", "email", "first_name", "middle_name", "last_name"]
+
+
+# to make reporter profile
+class ReporterForm(ModelForm):
+    class Meta:
+        model = ReporterProfile
+        fields = "__all__"
+
+
+class UserEditForm(ModelForm):
+    class Meta:
+        models = PortalUser
+        fields = ["email", "first_name", "middle_name", "last_name"]
