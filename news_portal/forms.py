@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+from .models import News, Evidence, Comment, ReportedNews, Ad, PortalUser, ReaderProfile, ReporterProfile
 from django.contrib.auth.forms import UserCreationForm
 from slugify import slugify
 from .models import News, Evidence, Comment, PortalUser, ReportedNews, Ad, Reporter
@@ -68,6 +69,25 @@ class AdRequestForm(ModelForm):
         }
 
 
+class UserForm(ModelForm):
+    class Meta:
+        model = PortalUser
+        fields = ["username", "password", "password", "email", "first_name", "middle_name", "last_name"]
+
+
+
+class ReporterForm(ModelForm):
+    class Meta:
+        model = ReporterProfile
+        fields = "__all__"
+
+
+class UserEditForm(ModelForm):
+    class Meta:
+        models = PortalUser
+        fields = ["email", "first_name", "middle_name", "last_name"]
+
+
 # user registration form
 class UserRegistrationForm(UserCreationForm):
     username = forms.CharField(required=True)
@@ -100,3 +120,4 @@ class UserRegistrationForm(UserCreationForm):
             user.save()
 
         return user
+

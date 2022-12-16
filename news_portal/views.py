@@ -7,6 +7,10 @@ from django.views.generic import TemplateView, DetailView
 from django.contrib.auth import authenticate, login
 import django.contrib.messages as messages
 
+from .forms import NewsForm, EvidenceForm, CommentForm, ReportedNewsForm, AdRequestForm, UserForm, UserEditForm
+from .choices import NewsCategory, UserTypes
+from .models import News, Reporter, RewardGranted, PortalUser
+
 from .forms import (
     NewsForm,
     EvidenceForm,
@@ -17,8 +21,10 @@ from .forms import (
 )
 from .choices import NewsCategory
 from .models import News, Reporter, RewardGranted
+
 import requests
 import json
+
 
 # urls and headers for apis
 urlForex = "https://currency-conversion-and-exchange-rates.p.rapidapi.com/convert"
@@ -34,6 +40,17 @@ headershoroscope = {
 }
 
 urlCurrency = "https://currency-conversion-and-exchange-rates.p.rapidapi.com/symbols"
+
+
+def update_profile(request):
+    instance = request.user
+    user_form = UserEditForm(instance=instance)
+    if request.method == "POST":
+        get_data = UserEditForm(request.POST)
+        if get_data.is_valid():
+            get_data.save()
+            return redirect('') #redirect to profile
+    return render(request, "", {"user_form":user_form}) #render the edit field
 
 # views for generating reward based on coins
 def redeem_coins(request, pk):
@@ -193,6 +210,7 @@ def add_evidence(request, pk):
 
 
 # the page to request ads
+
 
 
 def request_ad(request):
