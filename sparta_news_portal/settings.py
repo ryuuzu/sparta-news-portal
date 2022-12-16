@@ -47,14 +47,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.humanize",
     # Tailwind Apps
     "tailwind",
     "theme",
     "django_browser_reload",
-
     # Other Plugins
     "widget_tweaks",
-
     # Apps
     "news_portal",
 ]
@@ -138,8 +137,8 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 
 # Tailwind Settings
 TAILWIND_APP_NAME = "theme"

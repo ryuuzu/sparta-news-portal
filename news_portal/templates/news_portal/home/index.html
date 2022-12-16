@@ -11,15 +11,17 @@ Sparta News - Home
 <body class="bg-tan mx-20 px-24">
     {% include 'navbar.html' %}
     {% include 'news_portal/home/breaking_news.html' %}
+    {% include 'news_portal/home/category.html' %}
+    <div class="w-full bg-black text-white my-5 text-center text-4xl px-10 py-5">Place your ad here</div>
+    {% include 'footer.html' %}
 </body>
 {% endblock %}
 
 
 {% block scripts %}
-    
-    {% block breaking_news_script %}
-        
-    {% endblock %}
-        
+
+{% block breaking_news_script %}
+
 {% endblock %}
-    
+
+{% endblock %}

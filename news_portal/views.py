@@ -7,7 +7,17 @@ from django.views.generic import TemplateView, DetailView
 from django.contrib.auth import authenticate, login
 import django.contrib.messages as messages
 
-from .forms import NewsForm, EvidenceForm, CommentForm, ReportedNewsForm, AdRequestForm, UserForm, UserEditForm
+from news_portal.api import get_forex, get_horoscopes
+
+from .forms import (
+    NewsForm,
+    EvidenceForm,
+    CommentForm,
+    ReportedNewsForm,
+    AdRequestForm,
+    UserForm,
+    UserEditForm,
+)
 from .choices import NewsCategory, UserTypes
 from .models import News, Reporter, RewardGranted, PortalUser
 
@@ -49,8 +59,9 @@ def update_profile(request):
         get_data = UserEditForm(request.POST)
         if get_data.is_valid():
             get_data.save()
-            return redirect('') #redirect to profile
-    return render(request, "", {"user_form":user_form}) #render the edit field
+            return redirect("")  # redirect to profile
+    return render(request, "", {"user_form": user_form})  # render the edit field
+
 
 # views for generating reward based on coins
 def redeem_coins(request, pk):
@@ -96,6 +107,8 @@ def view_news(request: HttpRequest, slug):
         "news": news,
         "news_categories": NewsCategory.choices,
         "active_cat": news.category,
+        "horoscopes": get_horoscopes(),
+        "forex": get_forex(),
     }
     return render(request, "news_portal/news/index.html", context)
 
@@ -105,10 +118,19 @@ class HomepageView(TemplateView):
 
     def get(self, request: HttpRequest):
         breaking_news = News.objects.order_by("-upload_date")[:5]
+
+        partial_news = {}
+
+        for cat in NewsCategory.values:
+            partial_news[cat] = News.objects.filter(category=cat).order_by(
+                "-upload_date"
+            )[:4]
+
         context = {
             "news_categories": NewsCategory.choices,
             "active_cat": "news",
             "breaking_news": breaking_news,
+            "partial_news": partial_news,
         }
         return render(request, self.template_name, context)
 
@@ -210,7 +232,6 @@ def add_evidence(request, pk):
 
 
 # the page to request ads
-
 
 
 def request_ad(request):

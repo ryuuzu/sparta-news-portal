@@ -59,7 +59,7 @@ module.exports = {
 				brown: "#8A614F",
 			},
 			width: {
-				smallAd: "350px",
+				smallAd: "300px",
 			},
 		},
 	},

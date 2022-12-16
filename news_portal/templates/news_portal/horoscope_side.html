@@ -1,0 +1,21 @@
+{% load static %}
+
+<div class="horoscopes w-[300px] px-4 py-5  bg-white rounded-lg">
+    <h1 class="font-heading text-3xl text-center font-bold">Today's Horoscope</h1>
+    {% for horoscope in horoscopes %}
+    <div class="horoscope mt-5 flex flex-col gap-2">
+        <div class="flex justify-between gap-1 items-center mb-1">
+            <div class="flex gap-3 items-center">
+                {% with horoscope_image='images/horoscope/'|add:horoscope.name|add:'.png' %}
+                <div class="hc-icon-holder p-2 rounded-full bg-tan"><img src="{% static horoscope_image %}" class="w-6"
+                        alt="{{horoscope.name}} Icon"></div>
+                {% endwith %}
+                <span class="font-heading font-medium text-lg">{{horoscope.name|title}}</span>
+            </div>
+            <div class="text-xs text-gray">{{horoscope.date_range}}</div>
+        </div>
+        <hr>
+        <div class="text-xs mt-1">{{horoscope.details}}</div>
+    </div>
+    {% endfor %}
+</div>

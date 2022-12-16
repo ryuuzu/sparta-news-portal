@@ -1,0 +1,26 @@
+{% load static %}
+
+<div class="forex w-[300px] px-4 py-5  bg-white rounded-lg">
+    <h1 class="font-heading text-3xl text-center font-bold">Today's Forex</h1>
+    <table class="mt-4 text-[12px] w-full">
+        <thead>
+            <tr class="border-b-2">
+                <th class="text-left">Currency Name</th>
+                <th class="text-left">Buying (Rs.)</th>
+                <th class="text-left">Selling (Rs.)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for currency_forex in forex %}
+            <tr class="">
+                <td>{{currency_forex}}</td>
+                <td>{{currency_forex.buy_rate}}</td>
+                <td>{{currency_forex.sell_rate}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+    <h5 class="text-xs text-center mt-5">Data extracted from NRB API</h5>
+</div>

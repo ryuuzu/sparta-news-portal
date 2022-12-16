@@ -10,8 +10,8 @@ Sparta News - {{news.title}}
 
 <body class="bg-tan mx-20 px-24">
     {% include 'navbar.html' %}
-    <div class="container px-24 mx-auto flex gap-3">
-        <div class="news-container gap-3 w-auto flex flex-col">
+    <div class="container px-20 mx-auto flex gap-10">
+        <div class="news-container gap-3 w-auto flex-grow flex flex-col">
             <div class="headings">
                 <h1 class="font-heading font-semibold text-5xl">{{news.title}}</h1>
                 <h1 class="font-heading font-medium text-lg mt-2">{{news.sub_title}}</h1>
@@ -28,30 +28,33 @@ Sparta News - {{news.title}}
             <div class="news-contents">
 
                 {% if news.image1 or news.image2 or news.image3 %}
-                <div id="news-image-holder" class="my-2 w-3/4 mx-auto h-fit relative">
+                <div id="news-image-holder" class="my-4 w-3/4 mx-auto h-fit relative">
                     <i class="fa-solid fa-arrow-left absolute z-20 text-white left-2 top-1/2 bg-black p-3 rounded-full bg-opacity-80 hover:bg-opacity-40 cursor-pointer transition-all duration-300 -translate-y-1/2"
                         id="browse-left"></i>
                     {% if news.image1 %}
-                    <img src="{{news.image1.url}}" alt="" class="z-0">
+                    <img src="{{news.image1.url}}" alt="" class="z-0 mx-auto">
                     {% endif %}
                     {% if news.image2 %}
-                    <img src="{{news.image2.url}}" alt="" class="z-0">
+                    <img src="{{news.image2.url}}" alt="" class="z-0 mx-auto">
                     {% endif %}
                     {% if news.image3 %}
-                    <img src="{{news.image3.url}}" alt="" class="z-0">
+                    <img src="{{news.image3.url}}" alt="" class="z-0 mx-auto">
                     {% endif %}
                     <i class="fa-solid fa-arrow-right absolute z-20 text-white right-2 top-1/2 bg-black p-3 rounded-full bg-opacity-80 hover:bg-opacity-40 cursor-pointer transition-all duration-300 -translate-y-1/2"
                         id="browse-right"></i>
                 </div>
                 {% endif %}
 
-                <p class="font-roman">{{news.location}} {{news.body|linebreaksbr}}</p>
+                <p class="font-roman"><strong class="font-sans">{{news.location}}</strong>: {{news.body|linebreaksbr}}
+                </p>
             </div>
         </div>
-        <aside>
-            <div class="ad-banner bg-black w-smallAd text-white h-44">
+        <aside class="h-full flex flex-col gap-5">
+            <div class="ad-banner bg-black w-smallAd rounded-lg grid place-items-center text-white h-[600px]">
                 Place your Advertisement here.
             </div>
+            {% include 'news_portal/forex_side.html' %}
+            {% include 'news_portal/horoscope_side.html' %}
         </aside>
     </div>
 </body>
