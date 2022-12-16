@@ -10,7 +10,7 @@ Sparta News - Create Post
 {% block bodyContent %}
 
 <body class="bg-tan mx-20 px-24">
-    <form action="" method="post" id="news-post-form" class="flex gap-5 flex-col mx-56 my-10">
+    <form action="" enctype="multipart/form-data" method="post" id="news-post-form" class="flex gap-5 flex-col mx-56 my-10">
         <h1 class="text-center font-heading text-6xl font-bold">Post News</h1>
         {% csrf_token %}
         <div class="field-wrapper flex flex-col" id="wrapper-{{form.title.name}}">

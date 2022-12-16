@@ -112,15 +112,19 @@ class CreateNewsView(TemplateView):
 
 
 class CategoryView(TemplateView):
-    template_name = "news_portal/home/index.html"
+    template_name = "news_portal/news/category.html"
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any):
+        cat_news = News.objects.filter(category=kwargs["cat_name"]).order_by(
+            "-upload_date"
+        )[:10]
         if kwargs["cat_name"] not in NewsCategory.values:
             messages.error(request, "Category not found!")
             return redirect("home")
         context = {
             "news_categories": NewsCategory.choices,
             "active_cat": kwargs["cat_name"],
+            "all_cat_news": cat_news,
         }
         return render(request, self.template_name, context)
 

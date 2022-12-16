@@ -41,6 +41,7 @@
     let currentPage = 0;
 
     function switchToPage(page) {
+        currentPage = page;
         allBreakingNews.forEach((breakingNews, index) => {
             if (index === page) {
                 breakingNews.style.display = "flex";
