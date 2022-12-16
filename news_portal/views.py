@@ -100,8 +100,7 @@ def view_news(request: HttpRequest, slug):
         "news_categories": NewsCategory.choices,
         "active_cat": news.category,
         "horoscopes": get_horoscopes(),
-        # "forex": get_forex(),
-        "forex": None,
+        "forex": get_forex(),
     }
     return render(request, "news_portal/news/index.html", context)
 
