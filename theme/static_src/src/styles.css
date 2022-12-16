@@ -4,6 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* User dropdown menu */
+.profile-content {
+	@apply absolute right-0 z-40 min-w-fit rounded-lg bg-brown;
+}
+
+.profile-content a {
+	@apply block px-4 py-2 text-sm text-white first:rounded-t-lg last:rounded-b-lg hover:bg-dark-brown;
+}
+
 /* Style for News Post Form */
 #news-post-form .field-wrapper input[type="text"],
 #news-post-form .field-wrapper textarea,

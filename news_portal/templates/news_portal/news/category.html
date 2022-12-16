@@ -12,26 +12,35 @@ Sparta News - {{active_cat}}
     {% include 'navbar.html' %}
 
     <div class="news-holder mx-36">
-        {% for cat_news in all_cat_news %}
-        <div class="news mx-10 my-4 flex gap-5">
-            <img src="{{cat_news.image1.url}}" class="w-[300px] h-[200px] object-cover rounded-md" alt="">
-            <div class="news-details">
-                <div class="author text-xs"><strong>
-                        {% if cat_news.is_anonymous %}
-                        Anonymous
-                        {% else %}
-                        {{cat_news.created_by.first_name}} {{cat_news.created_by.last_name}}
-                        {% endif %}
-                    </strong> |
-                    {{cat_news.upload_date|date:'F j, Y'}}</div>
-                <h1 class="font-heading font-bold text-2xl leading-tight">{{cat_news.title}}</h1>
-                <div class="text-sm opacity-75">{{cat_news.body|truncatechars:200}}</div>
-                <a href="{% url 'view_news' cat_news.slug %}" class="text-xs underline">Read More >></a>
+        
+        {% if all_cat_news %}
+            {% for cat_news in all_cat_news %}
+            <div class="news mx-10 my-4 flex gap-5">
+                <img src="{{cat_news.image1.url}}" class="w-[300px] h-[200px] object-cover rounded-md" alt="">
+                <div class="news-details">
+                    <div class="author text-xs mb-2"><strong>
+                            {% if cat_news.is_anonymous %}
+                            Anonymous
+                            {% else %}
+                            {{cat_news.created_by.first_name}} {{cat_news.created_by.last_name}}
+                            {% endif %}
+                        </strong> |
+                        {{cat_news.upload_date|date:'F j, Y'}}</div>
+                    <h1 class="font-heading font-bold text-2xl leading-tight">{{cat_news.title}}</h1>
+                    <div class="text-sm opacity-75">{{cat_news.body|truncatechars:200}}</div>
+                    <a href="{% url 'view_news' cat_news.slug %}" class="text-xs underline">Read More >></a>
+                </div>
             </div>
-        </div>
-        <hr>
-        {% endfor %}
+            <hr>
+            {% endfor %}
+        {% else %}
+            <h1 class="text-center text-4xl font-bold text-gray">No news found in this category</h1>
+            <hr>
+        {% endif %}
+            
+        <div class="w-full bg-black text-white my-5 text-center text-4xl px-10 py-5">Place your ad here</div>
     </div>
+    {% include 'footer.html' %}
 
 </body>
 

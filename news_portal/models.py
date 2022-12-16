@@ -138,7 +138,7 @@ def create_all_profiles(sender, instance, **kwargs):
     elif sender == Reader:
         pass
         # if not ReaderProfile.objects.get(user=instance).exists():
-            # ReaderProfile.objects.create(user=instance)
+        # ReaderProfile.objects.create(user=instance)
     else:
         pass
 

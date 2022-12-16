@@ -1,0 +1,31 @@
+<hr class="mt-10">
+<footer class="flex gap-5 mt-1 mb-3">
+    <div class="w-2/5">
+        <h1 class="font-heading text-3xl font-bold my-2">About Us</h1>
+        <h4 class="font-sans text-dark-gray font-medium my-2">SPARTA - A team of students from Islington
+            College.</h4>
+        <p class="text-sm">We are enthusiastic students of Islington college. We are here to collab, learn and, share
+            our idea. No
+            retreat, no
+            surrender; that is Spartan law</p>
+    </div>
+    <div class="w-2/5">
+        <h1 class="font-heading text-3xl font-bold my-2">Contact Us</h1>
+        <ul>
+            <li class="text-xs my-1">Write as a reporter</li>
+            <li class="text-xs my-1">Letters to the Editor</li>
+            <li class="text-xs my-1">Advertise with us</li>
+            <li class="text-xs my-1">Send us a tip!</li>
+        </ul>
+    </div>
+    <div class="w-1/5">
+        <h1 class="font-heading text-3xl font-bold my-2">Categories</h1>
+        <ul>
+            {% for cat_value, cat_label in news_categories %}
+            <li class="text-xs my-1">
+                <a href="{% url 'cat_view' cat_value %}">{{cat_label}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</footer>

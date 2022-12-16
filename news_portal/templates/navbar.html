@@ -4,9 +4,13 @@
 
         <h1 class="font-heading text-5xl font-bold">Sparta News</h1>
 
-        <div class="user-links flex items-center relative gap-3">
+        <div class="user-links items-center relative inline-block gap-3">
             {% if user.is_authenticated %}
             Hello, {{user.username}} <i class="fa-solid fa-user"></i>
+            <div id="profile-options" class="hidden profile-content">
+                <a href="{% url 'create_news' %}">Post a News</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
             {% else %}
             <a href="{% url 'login' %}" class="rounded-full px-5 py-2">Login</a>
             <a href="{% url 'register' %}"
@@ -24,33 +28,17 @@
     </div>
 </nav>
 
-
 {% block navBarScripts %}
 <script>
     // display small menu on clikc on profile icon
     const profileIcon = document.querySelector('.fa-user');
-
-    // get parent of profile icon
-    const parent = profileIcon.parentElement;
-
-    const smallMenu = document.createElement('div');
-    const smallMenuContent = document.createElement('div');
-    smallMenuContent.classList.add('small-menu-content');
-    smallMenuContent.innerHTML = `
-            <a href="{% url 'logout' %}" class="rounded-full bg-black text-white  hover:bg-opacity-80 cursor-pointer transition-colors duration-300 px-5 py-2">Logout</a>
-        `
-    smallMenu.style.position = 'absolute';
-    smallMenu.appendChild(smallMenuContent);
+    const profileOptions = document.querySelector('#profile-options');
 
     profileIcon.addEventListener('click', (event) => {
-        const x = event.layerX;
-        const y = event.layerY;
-        smallMenu.style.top = `${y}px`;
-        smallMenu.style.left = `${x}px`;
-        parent.appendChild(smallMenu);
+        profileOptions.classList.toggle('hidden');
         document.addEventListener('click', (event) => {
             if (event.target !== profileIcon) {
-                parent.removeChild(smallMenu);
+                profileOptions.classList.add('hidden');
             }
         })
     })
