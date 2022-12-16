@@ -1,5 +1,5 @@
 {% extends 'news_portal/users/base.html' %}
-
+{% load widget_tweaks %}
 
 {% block formContents %}
 <div class="login flex flex-col items-center w-full justify-center h-3/4">
@@ -7,15 +7,12 @@
         <h1 class="text-4xl font-semibold mb-4">Hello! Welcome to Sparta News!</h1>
         <h4>Hello we are happy to have you join us</h4>
     </div>
+    {{form.errors}}
     <form id="login-form" class="register-form-grid w-3/4 gap-3" method="post">
         {% csrf_token %}
-        <input class="w-full rounded-lg" type="text" name="username" placeholder="Username" />
-        <input class="w-full rounded-lg" type="email" name="email" placeholder="Email" />
-        <input class="w-full rounded-lg" type="text" name="first_name" placeholder="First Name" />
-        <input class="w-full rounded-lg" type="text" name="middle_name" placeholder="Middle Name" />
-        <input class="w-full rounded-lg" type="text" name="last_name" placeholder="Last Name" />
-        <input class="w-full rounded-lg" type="password" name="password" placeholder="Password" />
-        <input class="w-full rounded-lg" type="password" name="password2" placeholder="Password" />
+        {% for field in form %}
+            {% render_field field|add_class:"w-full rounded-lg" placeholder=field.label %}
+        {% endfor %}
         <input
             class="rounded-lg px-5 py-2 bg-black hover:bg-opacity-80 cursor-pointer transition-colors duration-300 text-white"
             type="submit" value="Register" />

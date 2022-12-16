@@ -1,5 +1,6 @@
 # all required imports
 from typing import Any
+from venv import create
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import TemplateView, DetailView
@@ -9,6 +10,18 @@ import django.contrib.messages as messages
 from .forms import NewsForm, EvidenceForm, CommentForm, ReportedNewsForm, AdRequestForm, UserForm, UserEditForm
 from .choices import NewsCategory, UserTypes
 from .models import News, Reporter, RewardGranted, PortalUser
+
+from .forms import (
+    NewsForm,
+    EvidenceForm,
+    CommentForm,
+    ReportedNewsForm,
+    AdRequestForm,
+    UserRegistrationForm,
+)
+from .choices import NewsCategory
+from .models import News, Reporter, RewardGranted
+
 import requests
 import json
 
@@ -91,10 +104,7 @@ class HomepageView(TemplateView):
     template_name = "news_portal/home/index.html"
 
     def get(self, request: HttpRequest):
-        breaking_news = [
-            News.objects.get(slug="melamchi-wow"),
-            News.objects.get(slug="india-china-clash"),
-        ]
+        breaking_news = News.objects.order_by("-upload_date")[:5]
         context = {
             "news_categories": NewsCategory.choices,
             "active_cat": "news",
@@ -112,13 +122,10 @@ class CreateNewsView(TemplateView):
         return render(request, self.template_name, context)
 
     def post(self, request: HttpRequest):
-        create_form = NewsForm(request.POST)
+        create_form = NewsForm(request.POST, request.FILES)
         if create_form.is_valid():
-            news_data = {
-                
-            }
-            return redirect()
-        
+            news = create_form.save(request.user)
+            return redirect("view_news", slug=news.slug)
 
 
 class CategoryView(TemplateView):
@@ -153,17 +160,24 @@ class LoginView(TemplateView):
 
 class RegisterView(TemplateView):
     template_name = "news_portal/users/register.html"
+
+    # get view to send the form
+    def get(self, request: HttpRequest):
+        form = UserRegistrationForm()
+        return render(request, self.template_name, {"form": form})
+
+    # post view to create a user
     def post(self, request: HttpRequest):
-        user = UserForm(request.POST)
-        if user.is_valid():
-            user.save()
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get("username")
+            raw_password = form.cleaned_data.get("password1")
+            user = authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect("home")
-        messages.error(request, "Username/Password Incorrect")
-        return redirect("register")
-    
-    def get(self, request:HttpRequest):
-        return render(request,"news_portal/users/register.html", {'form':UserForm()})
+        return render(request, self.template_name, {"form": form})
+
 
 # the page to add news
 def add_news(request):

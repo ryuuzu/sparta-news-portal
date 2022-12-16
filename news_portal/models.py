@@ -28,7 +28,7 @@ class PortalUser(AbstractBaseUser):
     email = models.EmailField(max_length=100, null=True, blank=True)
 
     # mandatory fields if inherited from AbstractUser
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -69,7 +69,10 @@ class PortalUser(AbstractBaseUser):
     objects = PortalUserManager()
 
     def __str__(self):
-        return " ".join([self.first_name, self.last_name])
+        try:
+            return " ".join([self.first_name, self.last_name])
+        except:
+            return self.username
 
     def has_perm(self, perm, obj=None):
         return self.is_admin
@@ -126,14 +129,16 @@ class ReporterProfile(models.Model):
     )
 
 
-# create new profiles
 @receiver(post_save, sender=Reporter)
 @receiver(post_save, sender=Reader)
 def create_all_profiles(sender, instance, **kwargs):
     if sender == Reporter:
-        ReporterProfile.objects.create(user=instance)
+        if not ReporterProfile.objects.filter(user=instance).exists():
+            ReporterProfile.objects.create(user=instance)
     elif sender == Reader:
-        ReaderProfile.objects.create(user=instance)
+        pass
+        # if not ReaderProfile.objects.get(user=instance).exists():
+            # ReaderProfile.objects.create(user=instance)
     else:
         pass
 
