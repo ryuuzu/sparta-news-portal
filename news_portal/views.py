@@ -105,7 +105,7 @@ class CreateNewsView(TemplateView):
         return render(request, self.template_name, context)
 
     def post(self, request: HttpRequest):
-        create_form = NewsForm(request.POST)
+        create_form = NewsForm(request.POST, request.FILES)
         if create_form.is_valid():
             news = create_form.save(request.user)
             return redirect("view_news", slug=news.slug)
