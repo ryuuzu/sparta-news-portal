@@ -14,7 +14,7 @@
                 </strong> |
                 {{news.upload_date|date:'F j, Y'}}</div>
             <h1 class="font-heading font-bold text-4xl leading-tight">{{news.title}}</h1>
-            <div class="text-sm opacity-75">{{news.body|truncatechars:500}}</div>
+            <div class="text-sm opacity-75">{{news.body|truncatechars:300}}</div>
             <div class="flex justify-between items-center">
                 <div class="navigator">
                     {% for newses in breaking_news %}

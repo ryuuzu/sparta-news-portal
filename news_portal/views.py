@@ -7,7 +7,14 @@ from django.views.generic import TemplateView, DetailView
 from django.contrib.auth import authenticate, login
 import django.contrib.messages as messages
 
-from .forms import NewsForm, EvidenceForm, CommentForm, ReportedNewsForm, AdRequestForm
+from .forms import (
+    NewsForm,
+    EvidenceForm,
+    CommentForm,
+    ReportedNewsForm,
+    AdRequestForm,
+    UserRegistrationForm,
+)
 from .choices import NewsCategory
 from .models import News, Reporter, RewardGranted
 import requests
@@ -80,10 +87,7 @@ class HomepageView(TemplateView):
     template_name = "news_portal/home/index.html"
 
     def get(self, request: HttpRequest):
-        breaking_news = [
-            News.objects.get(slug="melamchi-wow"),
-            News.objects.get(slug="india-china-clash"),
-        ]
+        breaking_news = News.objects.order_by("-upload_date")[:5]
         context = {
             "news_categories": NewsCategory.choices,
             "active_cat": "news",
@@ -103,9 +107,7 @@ class CreateNewsView(TemplateView):
     def post(self, request: HttpRequest):
         create_form = NewsForm(request.POST)
         if create_form.is_valid():
-            news_data = create_form.cleaned_data.copy()
-            news_data["created_by"] = request.user
-            news = News.objects.create(**news_data)
+            news = create_form.save(request.user)
             return redirect("view_news", slug=news.slug)
 
 
@@ -141,6 +143,23 @@ class LoginView(TemplateView):
 
 class RegisterView(TemplateView):
     template_name = "news_portal/users/register.html"
+
+    # get view to send the form
+    def get(self, request: HttpRequest):
+        form = UserRegistrationForm()
+        return render(request, self.template_name, {"form": form})
+
+    # post view to create a user
+    def post(self, request: HttpRequest):
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get("username")
+            raw_password = form.cleaned_data.get("password1")
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect("home")
+        return render(request, self.template_name, {"form": form})
 
 
 # the page to add news

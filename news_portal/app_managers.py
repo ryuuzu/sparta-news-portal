@@ -46,7 +46,6 @@ class ReporterManager(models.Manager):
         return user
 
     def create(self, **kwargs):
-        print(kwargs)
         password = kwargs["password"]
         kwargs["password"] = make_password(password)
         return super().create(**kwargs)
