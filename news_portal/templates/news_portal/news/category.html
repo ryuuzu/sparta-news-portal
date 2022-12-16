@@ -14,7 +14,7 @@ Sparta News - {{active_cat}}
     <div class="news-holder mx-36">
         {% for cat_news in all_cat_news %}
         <div class="news mx-10 my-4 flex gap-5">
-            <img src="{{cat_news.image1.url}}" class="w-52 rounded-md" alt="">
+            <img src="{{cat_news.image1.url}}" class="w-[300px] h-[200px] object-cover rounded-md" alt="">
             <div class="news-details">
                 <div class="author text-xs"><strong>
                         {% if cat_news.is_anonymous %}
