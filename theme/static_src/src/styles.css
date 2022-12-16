@@ -21,6 +21,14 @@
 	@apply rounded-lg border-none bg-white text-sm checked:bg-brown focus:ring-brown;
 }
 
+#user-update-form .field-wrapper input[type="text"],
+#user-update-form .field-wrapper input[type="email"],
+#user-update-form .field-wrapper textarea,
+#user-update-form .field-wrapper select,
+#user-update-form .field-wrapper input[type="checkbox"] {
+	@apply rounded-lg border-none bg-white text-sm checked:bg-brown focus:ring-brown;
+}
+
 /* Custom Grid styles for Registration form */
 .register-form-grid {
 	display: grid;

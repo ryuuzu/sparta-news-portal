@@ -35,8 +35,11 @@ class Forex:
 
 
 def get_forex():
-    response = requests.get("https://www.nrb.org.np/api/forex/v1/rate")
-    json_data = response.json()
+    try:
+        response = requests.get("https://www.nrb.org.np/api/forex/v1/rate")
+        json_data = response.json()
+    except requests.ConnectTimeout:
+        return None
     inr = json_data["data"]["payload"]["rates"][0]
     usd = json_data["data"]["payload"]["rates"][1]
     eur = json_data["data"]["payload"]["rates"][2]

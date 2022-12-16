@@ -1,5 +1,14 @@
 from django.forms import ModelForm
-from .models import News, Evidence, Comment, ReportedNews, Ad, PortalUser, ReaderProfile, ReporterProfile
+from .models import (
+    News,
+    Evidence,
+    Comment,
+    ReportedNews,
+    Ad,
+    PortalUser,
+    ReaderProfile,
+    ReporterProfile,
+)
 from django.contrib.auth.forms import UserCreationForm
 from slugify import slugify
 from .models import News, Evidence, Comment, PortalUser, ReportedNews, Ad, Reporter
@@ -26,8 +35,8 @@ class NewsForm(ModelForm):
             "category",
             "is_anonymous",
         ]
-    
-    def save(self,author: Reporter, commit: bool = ...):
+
+    def save(self, author: Reporter, commit: bool = ...):
         self.instance.slug = slugify(self.instance.title)
         self.instance.created_by = author
         return super().save(commit)
@@ -72,8 +81,15 @@ class AdRequestForm(ModelForm):
 class UserForm(ModelForm):
     class Meta:
         model = PortalUser
-        fields = ["username", "password", "password", "email", "first_name", "middle_name", "last_name"]
-
+        fields = [
+            "username",
+            "password",
+            "password",
+            "email",
+            "first_name",
+            "middle_name",
+            "last_name",
+        ]
 
 
 class ReporterForm(ModelForm):
@@ -84,8 +100,19 @@ class ReporterForm(ModelForm):
 
 class UserEditForm(ModelForm):
     class Meta:
-        models = PortalUser
-        fields = ["email", "first_name", "middle_name", "last_name"]
+        model = PortalUser
+        fields = [
+            "email",
+            "gender",
+            "first_name",
+            "middle_name",
+            "last_name",
+            "dob",
+            "contact_number",
+            "photo",
+            "city",
+            "bio",
+        ]
 
 
 # user registration form
@@ -120,4 +147,3 @@ class UserRegistrationForm(UserCreationForm):
             user.save()
 
         return user
-

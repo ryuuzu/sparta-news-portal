@@ -8,7 +8,11 @@
             {% if user.is_authenticated %}
             Hello, {{user.username}} <i class="fa-solid fa-user"></i>
             <div id="profile-options" class="hidden profile-content">
-                <a href="{% url 'create_news' %}">Post a News</a>
+                
+                {% if user.user_type == 'Reporter' %}
+                    <a href="{% url 'create_news' %}">Post a News</a>
+                {% endif %}
+                <a href="{% url 'view_profile' user.id %}">View Profile</a>
                 <a href="{% url 'logout' %}">Logout</a>
             </div>
             {% else %}

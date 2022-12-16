@@ -16,19 +16,12 @@ from .forms import (
     ReportedNewsForm,
     AdRequestForm,
     UserForm,
+    UserRegistrationForm,
     UserEditForm,
 )
 from .choices import NewsCategory, UserTypes
 from .models import News, Reporter, RewardGranted, PortalUser
 
-from .forms import (
-    NewsForm,
-    EvidenceForm,
-    CommentForm,
-    ReportedNewsForm,
-    AdRequestForm,
-    UserRegistrationForm,
-)
 from .choices import NewsCategory
 from .models import News, Reporter, RewardGranted
 
@@ -64,22 +57,21 @@ def update_profile(request):
 
 
 # views for generating reward based on coins
-def redeem_coins(request, pk):
-    if request.method == "POST":
-        reporter = Reporter.objects.get(id=pk)
-        all_news = News.objects.filter(created_by=reporter)
-        total_reward = 0
-        for news in all_news:
-            current_reward = news.view_count - news.coin_generated
-            total_reward += current_reward
-            news.coin_generated = news.view_count
-            news.save()
-        reward = RewardGranted(
-            user_id=reporter, coins_reedemed=total_reward, monetary_value=total_reward
-        )
-        reward.save()
-        return redirect("index")  # coin generated page
-    return redirect("index")  # cannot access through get
+def redeem_coins(request: HttpRequest):
+    reporter: PortalUser = request.user
+    total_reward = reporter.redeemable
+    if total_reward < 100:
+        messages.error(request, "You have cannot redeem coins below 100.")
+        return redirect("view_profile", reporter.id)
+    total_money = total_reward * 0.001
+    reward = RewardGranted(
+        user_id=reporter,
+        coins_redeemed=total_reward,
+        monetary_value=total_money,
+    )
+    reward.save()
+    messages.success(request, f"{total_money} coins redeemed successfully")
+    return redirect("view_profile", reporter.id)  # coin generated page
 
 
 # the main page of the app.
@@ -108,9 +100,70 @@ def view_news(request: HttpRequest, slug):
         "news_categories": NewsCategory.choices,
         "active_cat": news.category,
         "horoscopes": get_horoscopes(),
-        "forex": get_forex(),
+        # "forex": get_forex(),
+        "forex": None,
     }
     return render(request, "news_portal/news/index.html", context)
+
+
+class ProfileView(DetailView):
+    model = PortalUser
+    template_name = "news_portal/users/profile.html"
+
+    def get(self, request: HttpRequest, pk=None, *args: Any, **kwargs: Any):
+        if pk:
+            user = get_object_or_404(PortalUser, pk=pk)
+        else:
+            user = request.user
+        context = {
+            "user_profile": user,
+            "news_categories": NewsCategory.choices,
+            "active_cat": "profile",
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request: HttpRequest, pk=None, *args: Any, **kwargs: Any):
+        user_form = UserEditForm(request.POST)
+        if user_form.is_valid():
+            user_form.save()
+            messages.error(request, "Profile was updated successfully.")
+        else:
+            messages.error(request, "Profile wasn't updated.")
+        return redirect("view_profile", request.user.id)  # render the edit field
+
+
+class ProfileUpdateView(TemplateView):
+    template_name = "news_portal/users/update.html"
+
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any):
+        user = request.user
+        user_form = UserEditForm(instance=user)
+        context = {
+            "user": user,
+            "news_categories": NewsCategory.choices,
+            "active_cat": "profile",
+            "user_form": user_form,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request: HttpRequest, pk=None, *args: Any, **kwargs: Any):
+        user_form = UserEditForm(request.POST)
+        if user_form.is_valid():
+            if user_form.has_changed():
+                print(user_form.changed_data)
+                data = {
+                    changed_data: user_form.cleaned_data[changed_data]
+                    for changed_data in user_form.changed_data
+                }
+                if request.FILES.get("photo"):
+                    data["photo"] = request.FILES.get("photo")
+                for key, value in data.items():
+                    setattr(request.user, key, value)
+                request.user.save()
+            messages.success(request, "Profile was updated successfully.")
+        else:
+            messages.error(request, "Profile wasn't updated.")
+        return redirect("view_profile", request.user.id)  # render the edit field
 
 
 class HomepageView(TemplateView):

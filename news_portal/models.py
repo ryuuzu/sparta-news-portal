@@ -1,3 +1,4 @@
+from ast import BinOp
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 
@@ -25,6 +26,7 @@ class PortalUser(AbstractBaseUser):
     )
 
     username = models.CharField(max_length=50, unique=True)
+    bio = models.TextField(max_length=500, null=True, blank=True)
     email = models.EmailField(max_length=100, null=True, blank=True)
 
     # mandatory fields if inherited from AbstractUser
@@ -60,13 +62,32 @@ class PortalUser(AbstractBaseUser):
     )
 
     city = models.CharField(
-        max_length=50, verbose_name="Permanent Address", null=True, blank=True
+        max_length=50, verbose_name="Address", null=True, blank=True
     )
 
     USERNAME_FIELD = "username"
     # REQUIRED_FIELDS = ['']
 
     objects = PortalUserManager()
+
+    @property
+    def full_name(self):
+        try:
+            return " ".join([self.first_name, self.last_name])
+        except:
+            return None
+
+    @property
+    def past_rewards(self):
+        return self.rewardgranted_set.aggregate(models.Sum("coins_redeemed"))["coins_redeemed__sum"]
+
+    @property
+    def redeemable(self):
+        return self.total_views - self.past_rewards
+
+    @property
+    def total_views(self):
+        return self.news_set.aggregate(models.Sum("view_count"))["view_count__sum"]
 
     def __str__(self):
         try:
@@ -134,7 +155,7 @@ class ReporterProfile(models.Model):
 def create_all_profiles(sender, instance, **kwargs):
     if sender == Reporter:
         if not ReporterProfile.objects.filter(user=instance).exists():
-            ReporterProfile.objects.create(user=instance)
+            ReporterProfile.objects.create(user=instance, **kwargs)
     elif sender == Reader:
         pass
         # if not ReaderProfile.objects.get(user=instance).exists():
@@ -216,5 +237,6 @@ class ReportedNews(models.Model):
 # model to create rewards
 class RewardGranted(models.Model):
     user_id = models.ForeignKey(Reporter, on_delete=models.CASCADE)
-    coins_redeemed = models.CharField(max_length=25)
-    monetary_value = models.CharField(max_length=25)
+    date_redeemed = models.DateTimeField(auto_now_add=True)
+    coins_redeemed = models.BigIntegerField()
+    monetary_value = models.FloatField()
